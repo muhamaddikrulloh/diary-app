@@ -1,5 +1,9 @@
 import React from "react";
 import DiaryCard from "../components/DiaryCard";
+import reactNative from "../../assets/moods/react-native.png";
+import kopiSore from "../../assets/moods/kopi-sore.jpeg";
+import pagi from "../../assets/moods/pagi.jpg";
+import avatar from "../../assets/moods/avatar.jpg";
 
 import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
 
@@ -10,7 +14,7 @@ const diaryEntries = [
     date: "2025-10-06",
     preview:
       "Hari ini aku bangun lebih pagi dan berjalan kaki 20 menit.Udara terasa sejuk...",
-    moodUri: "https://picsum.photos/seed/happy/80",
+    moodUri: pagi,
   },
   {
     id: 2,
@@ -28,12 +32,32 @@ const diaryEntries = [
       "Menikmati senja sambil membaca buku favorit. Warna langitsangat indah...",
     moodUri: "https://picsum.photos/seed/calm/80",
   },
+  {
+    id: 4,
+    title: "Belajar React Native",
+    date: "2026-10-09",
+    preview:
+      "Hari ini belajar membuat tampilan aplikasi menggunakan React Native. Banyak hal baru...",
+    moodUri: reactNative,
+  },
+  {
+    id: 5,
+    title: "Ngopi Sore",
+    date: "2026-10-08",
+    preview:
+      "Sore ini menikmati kopi sambil mengerjakan tugas. Suasana tenang dan bikin lebih fokus...",
+    moodUri: kopiSore,
+  },
 ];
 
 export default function DiaryListScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.header}>Buku Harian</Text>
+      <View style={styles.headerContainer}>
+        <Image source={avatar} style={styles.moodAvatar} />
+        <Text style={styles.header}>Buku Harian</Text>
+      </View>
+
       {diaryEntries.map((entry) => (
         <DiaryCard
           key={entry.id}
@@ -56,9 +80,13 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   header: {
-    fontSize: 24,
-    fontWeight: "700",
-    marginBottom: 12,
+    fontSize: 28,
+    fontWeight: "bold",
+  },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
   },
   card: {
     flexDirection: "row",
@@ -69,10 +97,14 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 12,
   },
-  mood: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+  moodAvatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 25,
+    marginBlock: 12,
+
+    borderWidth: 2,
+    borderColor: "#1fa2ff",
   },
   cardContent: {
     flex: 1,

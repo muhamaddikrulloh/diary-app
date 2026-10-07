@@ -1,20 +1,20 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import React from "react";
+import { View, Text, Image, StyleSheet } from "react-native";
 
 export default function DiaryCard({ title, date, preview, moodUri }) {
   return (
     <View style={styles.card}>
-      <Image source={{ uri: moodUri }} style={styles.mood} />
+      <Image
+        source={typeof moodUri === "string" ? { uri: moodUri } : moodUri}
+        style={styles.mood}
+      />
+
       <View style={styles.content}>
         <Text style={styles.title} numberOfLines={1}>
           {title}
         </Text>
         <Text style={styles.date}>{date}</Text>
-        <Text
-          style={styles.preview}
-          numberOfLines={3}
-          ellipsizeMode="tail"
-        >
+        <Text style={styles.preview} numberOfLines={3} ellipsizeMode="tail">
           {preview}
         </Text>
       </View>
@@ -24,11 +24,12 @@ export default function DiaryCard({ title, date, preview, moodUri }) {
 
 const styles = StyleSheet.create({
   card: {
-    flexDirection: 'row',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 12,
     padding: 12,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: "#1fa2ff",
     borderRadius: 12,
     marginBottom: 12,
   },
@@ -36,17 +37,20 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
+
+    borderWidth: 2,
+    borderColor: "#050505",
   },
   content: {
     flex: 1,
   },
   title: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   date: {
     fontSize: 12,
-    color: '#6b7280',
+    color: "#6b7280",
     marginBottom: 6,
   },
   preview: {
