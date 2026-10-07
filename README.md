@@ -44,4 +44,6 @@ Project ini menggunakan:
 
 Screenshot aplikasi yang berjalan menggunakan Expo Go:
 
-![Tampilan Diary App](./assets/screenshots/diary-app.jpeg)
+<p align="center">
+  <img src="./assets/screenshots/diary-app.jpeg" width="280" alt="Tampilan Diary App">
+</p>
