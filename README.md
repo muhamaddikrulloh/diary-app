@@ -39,6 +39,7 @@ Project ini menggunakan:
 - Menggunakan gambar remote dan lokal dari folder `assets/moods`.
 - Menampilkan avatar pengguna pada bagian header menggunakan `Image`.
 - Menambahkan variasi border dan outline pada card berdasarkan mood.
+- Mengelompokkan gambar pada folder `assets/moods` dan screenshot aplikasi pada folder `screenshots`.
 
 ## Screenshot
 
