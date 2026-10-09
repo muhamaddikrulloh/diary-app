@@ -1,12 +1,17 @@
 import React from "react";
+import { moodColors } from "../styles/moodColors";
+
 import { View, Text, Image, StyleSheet } from "react-native";
 
-export default function DiaryCard({ title, date, preview, moodUri }) {
+export default function DiaryCard({ title, date, preview, moodUri, mood }) {
   return (
     <View style={styles.card}>
       <Image
         source={typeof moodUri === "string" ? { uri: moodUri } : moodUri}
-        style={styles.mood}
+        style={[
+          styles.mood,
+          { borderColor: moodColors[mood]}
+        ]}
       />
 
       <View style={styles.content}>
@@ -37,9 +42,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-
     borderWidth: 2,
-    borderColor: "#050505",
   },
   content: {
     flex: 1,

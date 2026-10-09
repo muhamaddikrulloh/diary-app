@@ -15,6 +15,7 @@ const diaryEntries = [
     preview:
       "Hari ini aku bangun lebih pagi dan berjalan kaki 20 menit.Udara terasa sejuk...",
     moodUri: pagi,
+    mood: "calm",
   },
   {
     id: 2,
@@ -23,6 +24,7 @@ const diaryEntries = [
     preview:
       "Menyelesaikan modul praktikum dan berdiskusi dengan tim. Banyakinsight baru...",
     moodUri: "https://picsum.photos/seed/focus/80",
+    mood: "productive",
   },
   {
     id: 3,
@@ -31,6 +33,7 @@ const diaryEntries = [
     preview:
       "Menikmati senja sambil membaca buku favorit. Warna langitsangat indah...",
     moodUri: "https://picsum.photos/seed/calm/80",
+    mood: "happy",
   },
   {
     id: 4,
@@ -39,6 +42,7 @@ const diaryEntries = [
     preview:
       "Hari ini belajar membuat tampilan aplikasi menggunakan React Native. Banyak hal baru...",
     moodUri: reactNative,
+    mood: "excited",
   },
   {
     id: 5,
@@ -47,6 +51,7 @@ const diaryEntries = [
     preview:
       "Sore ini menikmati kopi sambil mengerjakan tugas. Suasana tenang dan bikin lebih fokus...",
     moodUri: kopiSore,
+    mood: "relaxed",
   },
 ];
 
@@ -54,7 +59,7 @@ export default function DiaryListScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.headerContainer}>
-        <Image source={avatar} style={styles.moodAvatar} />
+        <Image source={avatar} style={styles.avatar} />
         <Text style={styles.header}>Buku Harian</Text>
       </View>
 
@@ -65,6 +70,7 @@ export default function DiaryListScreen() {
           date={entry.date}
           preview={entry.preview}
           moodUri={entry.moodUri}
+          mood={entry.mood}
         />
       ))}
     </ScrollView>
@@ -97,13 +103,13 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 12,
   },
-  moodAvatar: {
+  avatar: {
     width: 48,
     height: 48,
     borderRadius: 25,
     marginBlock: 12,
 
-    borderWidth: 2,
+    borderWidth: 3,
     borderColor: "#1fa2ff",
   },
   cardContent: {
