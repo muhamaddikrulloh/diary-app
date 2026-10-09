@@ -37,9 +37,9 @@ Project ini menggunakan:
 
 - Menambahkan dua entri diary baru.
 - Menggunakan gambar remote dan lokal dari folder `assets/moods`.
-- Menampilkan avatar pengguna pada bagian header menggunakan `Image`.
-- Menambahkan variasi border dan outline pada card berdasarkan mood.
-- Mengelompokkan gambar pada folder `assets/moods` dan screenshot aplikasi pada folder `screenshots`.
+- Menampilkan avatar pengguna pada header menggunakan `Image`.
+- Menambahkan variasi warna border dan outline kartu secara dinamis berdasarkan mood.
+- Mengorganisasi konfigurasi warna pada `src/styles/moodColors.js`, aset gambar pada `assets/moods`, dan screenshot pada `screenshots`.
 
 ## Screenshot
 
