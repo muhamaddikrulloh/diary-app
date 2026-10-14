@@ -1,4 +1,4 @@
-# Diary App
+# Diary App - Pertemuan 2
 
 Aplikasi Diary sederhana yang dibuat menggunakan React Native dan Expo sebagai bagian dari tugas praktikum Pemrograman Mobile Multiplatform.
 
