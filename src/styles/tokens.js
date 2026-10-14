@@ -10,6 +10,13 @@ export const COLORS = {
   ripple: "#E5E7EB",
 };
 
+export const MOOD_COLORS = {
+  tenang: "#16A34A",
+  produktif: "#2563EB",
+  santai: "#D97706",
+  semangat: "#9333EA",
+};
+
 export const SPACE = {
   xs: 4,
   s: 8,

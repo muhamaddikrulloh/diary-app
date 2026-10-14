@@ -1,6 +1,8 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import { COLORS, SPACE, RADIUS, TYPO } from "../styles/tokens";
+import { MOOD_COLORS } from "../styles/tokens";
+
 export default function DiaryCard({
   title,
   date,
@@ -8,7 +10,10 @@ export default function DiaryCard({
   moodUri,
   onPress,
   variant = "list",
+  mood,
 }) {
+  const moodColor = MOOD_COLORS[mood] || COLORS.border;
+
   return (
     <Pressable
       onPress={onPress}
@@ -18,7 +23,7 @@ export default function DiaryCard({
       accessibilityRole="button"
       accessibilityLabel={`Buka detail ${title}, tanggal ${date}`}
     >
-      <View style={styles.card}>
+      <View style={[styles.card, { borderColor: moodColor }]}>
         <Image
           source={typeof moodUri === "string" ? { uri: moodUri } : moodUri}
           style={styles.mood}
@@ -28,6 +33,16 @@ export default function DiaryCard({
             {title}
           </Text>
           <Text style={styles.date}>{date}</Text>
+
+          <Text
+            style={[
+              styles.moodBadge,
+              { color: moodColor, borderColor: moodColor },
+            ]}
+          >
+            
+            {mood}
+          </Text>
           <Text style={styles.preview} numberOfLines={3} ellipsizeMode="tail">
             {preview}
           </Text>
@@ -72,5 +87,17 @@ const styles = StyleSheet.create({
 
   pressed: {
     opacity: 0.85,
+  },
+
+  moodBadge: {
+    alignSelf: "flex-start",
+    fontSize: TYPO.caption,
+    fontWeight: "600",
+    borderWidth: 1,
+    borderRadius: RADIUS.card,
+    paddingHorizontal: SPACE.s,
+    paddingVertical: SPACE.xs,
+    marginBottom: SPACE.s,
+    textTransform: "capitalize",
   },
 });
