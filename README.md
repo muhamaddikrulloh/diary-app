@@ -1,10 +1,10 @@
-# Diary App
+# Diary App - Pertemuan 3
 
 Aplikasi Diary sederhana yang dibuat menggunakan React Native dan Expo sebagai bagian dari tugas praktikum Pemrograman Mobile Multiplatform.
 
 ## Disusun Oleh
 
-**Nama:** Muhamad Dikrulloh<br>
+**Nama:** Muhamad Dikrulloh  
 **NIM:** 2430511076
 
 ## Cara Menjalankan Project
@@ -13,17 +13,17 @@ Aplikasi Diary sederhana yang dibuat menggunakan React Native dan Expo sebagai b
 2. Buka terminal pada folder project.
 3. Install dependency:
 
-```
-npm install
-```
+   ```bash
+   npm install
+   ```
 
 4. Jalankan aplikasi menggunakan Expo:
 
-```
-npx expo start
-```
+   ```bash
+   npx expo start
+   ```
 
-5. Scan QR Code menggunakan Expo Go pada perangkat Android atau jalankan melalui emulator.
+5. Scan QR Code menggunakan Expo Go pada perangkat Android atau jalankan melalui emulator. Untuk menjalankan melalui browser, tekan `w` pada terminal Expo.
 
 ## Dependency
 
@@ -35,16 +35,35 @@ Project ini menggunakan:
 
 ## Fitur yang Diselesaikan
 
-- Menambahkan dua entri diary baru.
-- Menggunakan gambar remote dan lokal dari folder `assets/moods`.
-- Menampilkan avatar pengguna pada header menggunakan `Image`.
-- Menambahkan variasi warna border dan outline kartu secara dinamis berdasarkan mood.
-- Mengorganisasi konfigurasi warna pada `src/styles/moodColors.js`, aset gambar pada `assets/moods`, dan screenshot pada `screenshots`.
+- Menampilkan lima entri diary dengan gambar lokal dan remote.
+- Menerapkan `StyleSheet` dan design tokens agar tampilan konsisten.
+- Membuat daftar diary responsif menggunakan `FlatList` dengan satu atau dua kolom sesuai ukuran layar.
+- Menampilkan detail catatan melalui `DiaryDetailModal` ketika kartu ditekan.
+- Menerapkan aksesibilitas dasar melalui label, kontras teks, dan ukuran area sentuh.
+- Menambahkan badge mood dan variasi warna border kartu berdasarkan mood.
+- Menampilkan empty state informatif ketika daftar diary kosong.
+- Menambahkan skeleton loader sebagai placeholder sebelum data ditampilkan.
+
+## Layout Responsif
+
+Aplikasi menggunakan `useWindowDimensions` untuk menyesuaikan jumlah kolom berdasarkan lebar layar. Pada layar dengan lebar kurang dari 600 dp, daftar diary ditampilkan dalam satu kolom. Sementara itu, pada layar dengan lebar 600 dp atau lebih, daftar berubah menjadi dua kolom menggunakan `FlatList`.
 
 ## Screenshot
 
-Screenshot aplikasi yang berjalan menggunakan Expo Go:
+### Tampilan 1 Kolom (Mobile)
 
 <p align="center">
-  <img src="./assets/screenshots/diary-app.jpeg" width="280" alt="Tampilan Diary App">
+  <img src="./assets/screenshots/mobile.png" width="280" alt="Tampilan Diary App 1 Kolom">
+</p>
+
+### Tampilan 2 Kolom (Tablet)
+
+<p align="center">
+  <img src="./assets/screenshots/tablet.png" width="650" alt="Tampilan Diary App 2 Kolom">
+</p>
+
+### Tampilan Empty State
+
+<p align="center">
+  <img src="./assets/screenshots/empty-state.png" width="650" alt="Tampilan Diary Saat Catatan Kosong">
 </p>
