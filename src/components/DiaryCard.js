@@ -12,13 +12,17 @@ export default function DiaryCard({
   return (
     <Pressable
       onPress={onPress}
-      android_ripple={{ color: "#e5e7eb" }}
-      style={({ pressed }) => [{ opacity: pressed ? 0.85 : 1 }]}
+      android_ripple={{ color: COLORS.ripple }}
+      style={({ pressed }) => [styles.pressable, pressed && styles.pressed]}
       accessible
-      accessibilityLabel={`Entri ${title} tanggal ${date}`}
+      accessibilityRole="button"
+      accessibilityLabel={`Buka detail ${title}, tanggal ${date}`}
     >
-      <View style={[styles.card, variant === "grid" && styles.cardGrid]}>
-        <Image source={{ uri: moodUri }} style={styles.mood} />
+      <View style={styles.card}>
+        <Image
+          source={typeof moodUri === "string" ? { uri: moodUri } : moodUri}
+          style={styles.mood}
+        />
         <View style={styles.content}>
           <Text style={styles.title} numberOfLines={1}>
             {title}
@@ -43,15 +47,30 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.card,
     backgroundColor: COLORS.surface,
   },
-  cardGrid: {},
+
   mood: {
     width: 64,
     height: 64,
     borderRadius: RADIUS.avatar,
-    backgroundColor: "#eef2ff",
+    backgroundColor: COLORS.imagePlaceholder,
   },
+
   content: { flex: 1 },
   title: { fontSize: TYPO.title, fontWeight: "700", color: COLORS.text },
-  date: { fontSize: TYPO.caption, color: COLORS.muted, marginBottom: 6 },
+
+  date: {
+    fontSize: TYPO.caption,
+    color: COLORS.muted,
+    marginBottom: 6,
+  },
+
   preview: { fontSize: TYPO.body, color: COLORS.text },
+
+  pressable: {
+    minHeight: 44,
+  },
+
+  pressed: {
+    opacity: 0.85,
+  },
 });

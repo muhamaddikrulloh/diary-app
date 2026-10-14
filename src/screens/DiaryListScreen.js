@@ -9,6 +9,8 @@ import {
 import DiaryCard from "../components/DiaryCard";
 import DiaryDetailModal from "./DiaryDetailModal";
 import { COLORS, SPACE, TYPO, BREAKPOINTS } from "../styles/tokens";
+import belajarReactNative from "../../assets/moods/belajar-react-native.jpg";
+import akhirPekan from "../../assets/moods/akhir-pekan.jpg";
 
 const DATA = [
   {
@@ -38,50 +40,67 @@ const DATA = [
     moodUri: "https://picsum.photos/seed/calm/200",
     heroUri: "https://picsum.photos/seed/calmhero/800/450",
   },
+  {
+    id: 4,
+    title: "Belajar React Native",
+    date: "2025-10-07",
+    preview: "Mempelajari komponen dan styling.",
+    body: "Hari ini saya mempelajari penggunaan StyleSheet, design tokens, dan komponen React Native. Saya mulai memahami bagaimana membuat tampilan aplikasi yang lebih konsisten.",
+    moodUri: belajarReactNative,
+    heroUri: belajarReactNative,
+  },
+  {
+    id: 5,
+    title: "Menikmati Akhir Pekan",
+    date: "2025-10-08",
+    preview: "Menghabiskan waktu untuk beristirahat.",
+    body: "Setelah beberapa hari mengerjakan tugas kuliah, saya memanfaatkan akhir pekan untuk beristirahat dan mengisi kembali energi.",
+    moodUri: akhirPekan,
+    heroUri: akhirPekan,
+  },
 ];
 
 export default function DiaryListScreen() {
-const { width } = useWindowDimensions();
-const twoCols = width >= BREAKPOINTS.tablet;
-const [selected, setSelected] = useState(null);
+  const { width } = useWindowDimensions();
+  const twoCols = width >= BREAKPOINTS.tablet;
+  const [selected, setSelected] = useState(null);
 
-const renderItem = ({ item }) => (
-  <View style={[styles.itemWrap, twoCols && styles.itemWrap2]}>
-    <DiaryCard
-      title={item.title}
-      date={item.date}
-      preview={item.preview}
-      moodUri={item.moodUri}
-      variant={twoCols ? "grid" : "list"}
-      onPress={() => setSelected(item)}
-    />
-  </View>
-);
+  const renderItem = ({ item }) => (
+    <View style={[styles.itemWrap, twoCols && styles.itemWrapGrid]}>
+      <DiaryCard
+        title={item.title}
+        date={item.date}
+        preview={item.preview}
+        moodUri={item.moodUri}
+        onPress={() => setSelected(item)}
+      />
+    </View>
+  );
 
-const keyForCols = useMemo(() => (twoCols ? "grid2" : "list1"), [twoCols]);
-return (
-  <View style={styles.container}>
-    <Text style={styles.header}>Buku Harian</Text>
-    <FlatList
-      key={keyForCols}
-      data={DATA}
-      numColumns={twoCols ? 2 : 1}
-      keyExtractor={(it) => String(it.id)}
-      renderItem={renderItem}
-      columnWrapperStyle={twoCols ? { gap: SPACE.m } : undefined}
-      contentContainerStyle={{
-        padding: SPACE.l,
-        gap: SPACE.m,
-        paddingTop: SPACE.m,
-      }}
-      ListEmptyComponent={<Text style={styles.empty}>Belum ada entri.</Text>}
-    />
-    <DiaryDetailModal
-      visible={!!selected}
-      entry={selected}
-      onClose={() => setSelected(null)}
-    />
-  </View>
+  const keyForCols = useMemo(() => (twoCols ? "grid2" : "list1"), [twoCols]);
+  return (
+    <View style={styles.container}>
+      <Text style={styles.header}>Buku Harian</Text>
+      <FlatList
+        key={keyForCols}
+        data={DATA}
+        numColumns={twoCols ? 2 : 1}
+        keyExtractor={(it) => String(it.id)}
+        renderItem={renderItem}
+        columnWrapperStyle={twoCols ? { gap: SPACE.m } : undefined}
+        contentContainerStyle={{
+          padding: SPACE.l,
+          gap: SPACE.m,
+          paddingTop: SPACE.m,
+        }}
+        ListEmptyComponent={<Text style={styles.empty}>Belum ada entri.</Text>}
+      />
+      <DiaryDetailModal
+        visible={!!selected}
+        entry={selected}
+        onClose={() => setSelected(null)}
+      />
+    </View>
   );
 }
 const styles = StyleSheet.create({
@@ -93,7 +112,14 @@ const styles = StyleSheet.create({
     paddingTop: SPACE.l,
     color: COLORS.text,
   },
-  itemWrap: { flex: 1 },
-  itemWrap2: { flex: 1 / 2 },
+
+  itemWrap: {
+    flex: 1,
+  },
+
+  itemWrapGrid: {
+    flex: 0.5,
+  },
+
   empty: { textAlign: "center", color: COLORS.muted, marginTop: 40 },
 });
