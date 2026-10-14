@@ -1,130 +1,99 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  useWindowDimensions,
+} from "react-native";
 import DiaryCard from "../components/DiaryCard";
-import reactNative from "../../assets/moods/react-native.png";
-import kopiSore from "../../assets/moods/kopi-sore.jpeg";
-import pagi from "../../assets/moods/pagi.jpg";
-import avatar from "../../assets/moods/avatar.jpg";
+import DiaryDetailModal from "./DiaryDetailModal";
+import { COLORS, SPACE, TYPO, BREAKPOINTS } from "../styles/tokens";
 
-import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
-
-const diaryEntries = [
+const DATA = [
   {
     id: 1,
     title: "Pagi yang Tenang",
     date: "2025-10-06",
-    preview:
-      "Hari ini aku bangun lebih pagi dan berjalan kaki 20 menit.Udara terasa sejuk...",
-    moodUri: pagi,
-    mood: "calm",
+    preview: "Bangun lebih pagi…",
+    body: "Catatan lengkap…",
+    moodUri: "https://picsum.photos/seed/happy/200",
+    heroUri: "https://picsum.photos/seed/happyhero/800/450",
   },
   {
     id: 2,
     title: "Produktif di Kampus",
     date: "2025-10-05",
-    preview:
-      "Menyelesaikan modul praktikum dan berdiskusi dengan tim. Banyakinsight baru...",
-    moodUri: "https://picsum.photos/seed/focus/80",
-    mood: "productive",
+    preview: "Menyelesaikan modul…",
+    body: "Kemajuan proyek…",
+    moodUri: "https://picsum.photos/seed/focus/200",
+    heroUri: "https://picsum.photos/seed/focushero/800/450",
   },
   {
     id: 3,
     title: "Senja di Taman",
     date: "2025-10-04",
-    preview:
-      "Menikmati senja sambil membaca buku favorit. Warna langitsangat indah...",
-    moodUri: "https://picsum.photos/seed/calm/80",
-    mood: "happy",
-  },
-  {
-    id: 4,
-    title: "Belajar React Native",
-    date: "2026-10-09",
-    preview:
-      "Hari ini belajar membuat tampilan aplikasi menggunakan React Native. Banyak hal baru...",
-    moodUri: reactNative,
-    mood: "excited",
-  },
-  {
-    id: 5,
-    title: "Ngopi Sore",
-    date: "2026-10-08",
-    preview:
-      "Sore ini menikmati kopi sambil mengerjakan tugas. Suasana tenang dan bikin lebih fokus...",
-    moodUri: kopiSore,
-    mood: "relaxed",
+    preview: "Membaca buku…",
+    body: "Refleksi singkat…",
+    moodUri: "https://picsum.photos/seed/calm/200",
+    heroUri: "https://picsum.photos/seed/calmhero/800/450",
   },
 ];
 
 export default function DiaryListScreen() {
-  return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <View style={styles.headerContainer}>
-        <Image source={avatar} style={styles.avatar} />
-        <Text style={styles.header}>Buku Harian</Text>
-      </View>
+const { width } = useWindowDimensions();
+const twoCols = width >= BREAKPOINTS.tablet;
+const [selected, setSelected] = useState(null);
 
-      {diaryEntries.map((entry) => (
-        <DiaryCard
-          key={entry.id}
-          title={entry.title}
-          date={entry.date}
-          preview={entry.preview}
-          moodUri={entry.moodUri}
-          mood={entry.mood}
-        />
-      ))}
-    </ScrollView>
+const renderItem = ({ item }) => (
+  <View style={[styles.itemWrap, twoCols && styles.itemWrap2]}>
+    <DiaryCard
+      title={item.title}
+      date={item.date}
+      preview={item.preview}
+      moodUri={item.moodUri}
+      variant={twoCols ? "grid" : "list"}
+      onPress={() => setSelected(item)}
+    />
+  </View>
+);
+
+const keyForCols = useMemo(() => (twoCols ? "grid2" : "list1"), [twoCols]);
+return (
+  <View style={styles.container}>
+    <Text style={styles.header}>Buku Harian</Text>
+    <FlatList
+      key={keyForCols}
+      data={DATA}
+      numColumns={twoCols ? 2 : 1}
+      keyExtractor={(it) => String(it.id)}
+      renderItem={renderItem}
+      columnWrapperStyle={twoCols ? { gap: SPACE.m } : undefined}
+      contentContainerStyle={{
+        padding: SPACE.l,
+        gap: SPACE.m,
+        paddingTop: SPACE.m,
+      }}
+      ListEmptyComponent={<Text style={styles.empty}>Belum ada entri.</Text>}
+    />
+    <DiaryDetailModal
+      visible={!!selected}
+      entry={selected}
+      onClose={() => setSelected(null)}
+    />
+  </View>
   );
 }
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#ffffff",
-  },
-  content: {
-    padding: 16,
-  },
+  container: { flex: 1, backgroundColor: COLORS.surface },
   header: {
-    fontSize: 28,
-    fontWeight: "bold",
-  },
-  headerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
-  card: {
-    flexDirection: "row",
-    gap: 12,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: "#e5e7eb",
-    borderRadius: 12,
-    marginBottom: 12,
-  },
-  avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 25,
-    marginBlock: 12,
-
-    borderWidth: 3,
-    borderColor: "#1fa2ff",
-  },
-  cardContent: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 16,
+    fontSize: TYPO.h1,
     fontWeight: "700",
+    paddingHorizontal: SPACE.l,
+    paddingTop: SPACE.l,
+    color: COLORS.text,
   },
-  date: {
-    fontSize: 12,
-    color: "#6b7280",
-    marginBottom: 6,
-  },
-  preview: {
-    fontSize: 14,
-  },
+  itemWrap: { flex: 1 },
+  itemWrap2: { flex: 1 / 2 },
+  empty: { textAlign: "center", color: COLORS.muted, marginTop: 40 },
 });
