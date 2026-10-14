@@ -1,50 +1,19 @@
-# Diary App
+# Praktikum Pemrograman Mobile Multiplatform
 
-Aplikasi Diary sederhana yang dibuat menggunakan React Native dan Expo sebagai bagian dari tugas praktikum Pemrograman Mobile Multiplatform.
+Repository ini digunakan untuk mengumpulkan dan mendokumentasikan hasil praktikum Pemrograman Mobile Multiplatform menggunakan React Native dan Expo.
 
-## Disusun Oleh
+## Daftar Pertemuan
 
-**Nama:** Muhamad Dikrulloh<br>
+| Pertemuan | Materi | Repository |
+|---|---|---|
+| Pertemuan 2 | Pengembangan Diary App | [Lihat Praktikum](https://github.com/muhamaddikrulloh/diary-app/tree/pertemuan-2) |
+| Pertemuan 3 | Praktikum Pertemuan 3 | [Lihat Praktikum](https://github.com/muhamaddikrulloh/diary-app/tree/pertemuan-3) |
+
+## Oleh
+
+**Nama:** Muhamad Dikrulloh  
 **NIM:** 2430511076
 
-## Cara Menjalankan Project
+## Keterangan
 
-1. Clone repository atau download project.
-2. Buka terminal pada folder project.
-3. Install dependency:
-
-```
-npm install
-```
-
-4. Jalankan aplikasi menggunakan Expo:
-
-```
-npx expo start
-```
-
-5. Scan QR Code menggunakan Expo Go pada perangkat Android atau jalankan melalui emulator.
-
-## Dependency
-
-Project ini menggunakan:
-
-- React Native
-- Expo
-- react-native-safe-area-context
-
-## Fitur yang Diselesaikan
-
-- Menambahkan dua entri diary baru.
-- Menggunakan gambar remote dan lokal dari folder `assets/moods`.
-- Menampilkan avatar pengguna pada header menggunakan `Image`.
-- Menambahkan variasi warna border dan outline kartu secara dinamis berdasarkan mood.
-- Mengorganisasi konfigurasi warna pada `src/styles/moodColors.js`, aset gambar pada `assets/moods`, dan screenshot pada `screenshots`.
-
-## Screenshot
-
-Screenshot aplikasi yang berjalan menggunakan Expo Go:
-
-<p align="center">
-  <img src="./assets/screenshots/diary-app.jpeg" width="280" alt="Tampilan Diary App">
-</p>
+Setiap pertemuan disimpan dalam branch terpisah agar kode program, dokumentasi, dan hasil praktikum dapat diakses secara mandiri.
