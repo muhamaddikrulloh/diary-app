@@ -9,9 +9,9 @@ Repository ini digunakan untuk mengumpulkan dan mendokumentasikan hasil praktiku
 | Pertemuan 2 | Pengembangan Diary App | [Lihat Praktikum](https://github.com/muhamaddikrulloh/diary-app/tree/pertemuan-2) |
 | Pertemuan 3 | Praktikum Pertemuan 3 | [Lihat Praktikum](https://github.com/muhamaddikrulloh/diary-app/tree/pertemuan-3) |
 
-## Identitas Mahasiswa
+## Disusun Oleh
 
-**Nama:** Muhamad Dikrulloh  
+**Nama:** Muhamad Dikrulloh<br>
 **NIM:** 2430511076
 
 ## Keterangan
