@@ -67,3 +67,9 @@ Aplikasi menggunakan `useWindowDimensions` untuk menyesuaikan jumlah kolom berda
 <p align="center">
   <img src="./assets/screenshots/empty-state.png" width="650" alt="Tampilan Diary Saat Catatan Kosong">
 </p>
+
+### Tampilan Skeleton Loader
+
+<p align="center">
+  <img src="./assets/screenshots/skeleton-loader.png" width="650" alt="Tampilan Diary Saat Catatan Kosong">
+</p>
