@@ -1,146 +1,93 @@
-import React, { useEffect, useMemo, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  useWindowDimensions,
-} from "react-native";
+import React, { useMemo, useState } from "react";
+import { View, Text, StyleSheet, FlatList } from "react-native";
+import { COLORS, SPACE, TYPO } from "../styles/tokens";
 import DiaryCard from "../components/DiaryCard";
 import DiaryDetailModal from "./DiaryDetailModal";
-import { COLORS, SPACE, RADIUS, TYPO, BREAKPOINTS } from "../styles/tokens";
-import belajarReactNative from "../../assets/moods/belajar-react-native.jpg";
-import akhirPekan from "../../assets/moods/akhir-pekan.jpg";
+import SearchBar from "../components/SearchBar";
+import EntryForm from "../components/EntryForm";
 
-const DATA = [
+const INITIAL_ENTRIES = [
   {
     id: 1,
     title: "Pagi yang Tenang",
-    mood: "tenang",
-    date: "2025-10-06",
-    preview: "Bangun lebih pagi…",
-    body: "Catatan lengkap…",
-    moodUri: "https://picsum.photos/seed/happy/200",
-    heroUri: "https://picsum.photos/seed/happyhero/800/450",
+    date: "2026-10-18",
+    preview: "Jalan pagi 20 menit dan menikmati udara segar.",
+    body: "Hari ini aku bangun lebih pagi dan berjalan kaki selama 20 menit.",
+    moodImage: require("../../assets/moods/happy.png"),
   },
   {
     id: 2,
     title: "Produktif di Kampus",
-    mood: "produktif",
-    date: "2025-10-05",
-    preview: "Menyelesaikan modul…",
-    body: "Kemajuan proyek…",
-    moodUri: "https://picsum.photos/seed/focus/200",
-    heroUri: "https://picsum.photos/seed/focushero/800/450",
+    date: "2026-10-17",
+    preview: "Menyelesaikan modul praktikum dan berdiskusi dengan tim.",
+    body: "Hari ini cukup produktif karena beberapa target perkuliahan selesai.",
+    moodImage: require("../../assets/moods/focus.png"),
   },
   {
     id: 3,
     title: "Senja di Taman",
-    mood: "tenang",
-    date: "2025-10-04",
-    preview: "Membaca buku…",
-    body: "Refleksi singkat…",
-    moodUri: "https://picsum.photos/seed/calm/200",
-    heroUri: "https://picsum.photos/seed/calmhero/800/450",
-  },
-  {
-    id: 4,
-    title: "Belajar React Native",
-    mood: "produktif",
-    date: "2025-10-07",
-    preview: "Mempelajari komponen dan styling.",
-    body: "Hari ini saya mempelajari penggunaan StyleSheet, design tokens, dan komponen React Native. Saya mulai memahami bagaimana membuat tampilan aplikasi yang lebih konsisten.",
-    moodUri: belajarReactNative,
-    heroUri: belajarReactNative,
-  },
-  {
-    id: 5,
-    title: "Menikmati Akhir Pekan",
-    mood: "santai",
-    date: "2025-10-08",
-    preview: "Menghabiskan waktu untuk beristirahat.",
-    body: "Setelah beberapa hari mengerjakan tugas kuliah, saya memanfaatkan akhir pekan untuk beristirahat dan mengisi kembali energi.",
-    moodUri: akhirPekan,
-    heroUri: akhirPekan,
+    date: "2026-10-16",
+    preview: "Membaca buku sambil menikmati suasana senja.",
+    body: "Sore ini saya menikmati waktu di taman sambil membaca buku.",
+    moodImage: require("../../assets/moods/calm.png"),
   },
 ];
 
-function DiarySkeleton() {
-  return (
-    <View style={styles.skeletonCard}>
-      <View style={styles.skeletonAvatar} />
-
-      <View style={styles.skeletonContent}>
-        <View style={styles.skeletonTitle} />
-        <View style={styles.skeletonDate} />
-        <View style={styles.skeletonPreview} />
-      </View>
-    </View>
-  );
-}
-
 export default function DiaryListScreen() {
-  const { width } = useWindowDimensions();
-  const twoCols = width >= BREAKPOINTS.tablet;
+  // STATE UTAMA
+  const [entries, setEntries] = useState(INITIAL_ENTRIES);
+  const [query, setQuery] = useState("");
+  const [likedIds, setLikedIds] = useState(new Set());
   const [selected, setSelected] = useState(null);
 
-  const [loading, setLoading] = useState(true);
+  // DERIVED STATE
+  const filtered = useMemo(() => {
+    if (!query.trim()) return entries;
+    const q = query.toLowerCase();
+    return entries.filter(
+      (entry) =>
+        entry.title.toLowerCase().includes(q) ||
+        entry.preview.toLowerCase().includes(q) ||
+        entry.date.toLowerCase().includes(q),
+    );
+  }, [entries, query]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1500);
+  const toggleLike = (id) => {
+    setLikedIds((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
 
-    return () => clearTimeout(timer);
-  }, []);
+  const addEntry = (newEntry) => {
+    setEntries((prev) => [newEntry, ...prev]);
+  };
 
   const renderItem = ({ item }) => (
-    <View style={[styles.itemWrap, twoCols && styles.itemWrapGrid]}>
-      <DiaryCard
-        title={item.title}
-        date={item.date}
-        preview={item.preview}
-        moodUri={item.moodUri}
-        mood={item.mood}
-        onPress={() => setSelected(item)}
-      />
-    </View>
+    <DiaryCard
+      title={item.title}
+      date={item.date}
+      preview={item.preview}
+      moodImage={item.moodImage}
+      liked={likedIds.has(item.id)}
+      onToggleLike={() => toggleLike(item.id)}
+      onPress={() => setSelected(item)}
+    />
   );
 
-  const keyForCols = useMemo(() => (twoCols ? "grid2" : "list1"), [twoCols]);
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Buku Harian</Text>
-      {loading ? (
-        <View style={styles.skeletonList}>
-          {[1, 2, 3].map((item) => (
-            <DiarySkeleton key={item} />
-          ))}
-        </View>
-      ) : (
-        <FlatList
-          key={keyForCols}
-          data={DATA}
-          numColumns={twoCols ? 2 : 1}
-          keyExtractor={(item) => String(item.id)}
-          renderItem={renderItem}
-          columnWrapperStyle={twoCols ? { gap: SPACE.m } : undefined}
-          contentContainerStyle={{
-            padding: SPACE.l,
-            gap: SPACE.m,
-            paddingTop: SPACE.m,
-          }}
-          ListEmptyComponent={
-            <View style={styles.emptyContainer}>
-              <Text style={styles.emptyTitle}>Belum Ada Catatan</Text>
-              <Text style={styles.emptyDescription}>
-                Belum ada cerita yang ditulis. Mulai abadikan momen dan
-                pengalaman harianmu di sini.
-              </Text>
-            </View>
-          }
-        />
-      )}
+      <SearchBar onChange={setQuery} />
+      <EntryForm onSubmit={addEntry} />
+      <FlatList
+        data={filtered}
+        keyExtractor={(item) => String(item.id)}
+        renderItem={renderItem}
+        contentContainerStyle={styles.listContent}
+        ListEmptyComponent={<Text style={styles.empty}>Belum ada entri.</Text>}
+      />
       <DiaryDetailModal
         visible={!!selected}
         entry={selected}
@@ -149,8 +96,12 @@ export default function DiaryListScreen() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.surface },
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.surface,
+  },
   header: {
     fontSize: TYPO.h1,
     fontWeight: "700",
@@ -158,84 +109,14 @@ const styles = StyleSheet.create({
     paddingTop: SPACE.l,
     color: COLORS.text,
   },
-
-  itemWrap: {
-    flex: 1,
-  },
-
-  itemWrapGrid: {
-    flex: 0.5,
-  },
-
-  emptyContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    padding: SPACE.xl,
-    marginTop: SPACE.xxl,
-  },
-
-  emptyTitle: {
-    fontSize: TYPO.title,
-    fontWeight: "700",
-    color: COLORS.text,
-    marginBottom: SPACE.s,
-    textAlign: "center",
-  },
-
-  emptyDescription: {
-    fontSize: TYPO.body,
-    color: COLORS.muted,
-    textAlign: "center",
-    lineHeight: 22,
-    maxWidth: 300,
-  },
-
-  skeletonCard: {
-    flexDirection: "row",
-    gap: SPACE.m,
-    padding: SPACE.m,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: RADIUS.card,
-    backgroundColor: COLORS.surface,
-  },
-
-  skeletonAvatar: {
-    width: 60,
-    height: 60,
-    borderRadius: RADIUS.avatar,
-    backgroundColor: COLORS.border,
-  },
-
-  skeletonContent: {
-    flex: 1,
-    gap: SPACE.s,
-    justifyContent: "center",
-  },
-
-  skeletonTitle: {
-    width: "65%",
-    height: 14,
-    borderRadius: 4,
-    backgroundColor: COLORS.border,
-  },
-
-  skeletonDate: {
-    width: "35%",
-    height: 10,
-    borderRadius: 4,
-    backgroundColor: COLORS.border,
-  },
-
-  skeletonPreview: {
-    width: "85%",
-    height: 12,
-    borderRadius: 4,
-    backgroundColor: COLORS.border,
-  },
-
-  skeletonList: {
+  listContent: {
     padding: SPACE.l,
     gap: SPACE.m,
+    paddingTop: SPACE.m,
+  },
+  empty: {
+    textAlign: "center",
+    color: COLORS.muted,
+    marginTop: 40,
   },
 });
