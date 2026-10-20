@@ -14,6 +14,7 @@ const INITIAL_ENTRIES = [
     preview: "Jalan pagi 20 menit dan menikmati udara segar.",
     body: "Hari ini aku bangun lebih pagi dan berjalan kaki selama 20 menit.",
     moodImage: require("../../assets/moods/happy.png"),
+    heroUri: "https://picsum.photos/seed/happyhero/800/450",
   },
   {
     id: 2,
@@ -22,6 +23,7 @@ const INITIAL_ENTRIES = [
     preview: "Menyelesaikan modul praktikum dan berdiskusi dengan tim.",
     body: "Hari ini cukup produktif karena beberapa target perkuliahan selesai.",
     moodImage: require("../../assets/moods/focus.png"),
+    heroUri: "https://picsum.photos/seed/focushero/800/450",
   },
   {
     id: 3,
@@ -30,6 +32,7 @@ const INITIAL_ENTRIES = [
     preview: "Membaca buku sambil menikmati suasana senja.",
     body: "Sore ini saya menikmati waktu di taman sambil membaca buku.",
     moodImage: require("../../assets/moods/calm.png"),
+    heroUri: "https://picsum.photos/seed/calmhero/800/450",
   },
 ];
 

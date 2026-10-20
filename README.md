@@ -1,6 +1,6 @@
 # Diary App - Pertemuan 4
 
-Aplikasi Diary sederhana yang dibuat menggunakan React Native dan Expo sebagai bagian dari tugas praktikum Pemrograman Mobile Multiplatform.
+Aplikasi Diary sederhana berbasis React Native dan Expo yang dikembangkan sebagai bagian dari praktikum Pemrograman Mobile Multiplatform. Pada pertemuan ini, aplikasi dikembangkan dengan penerapan Props dan State untuk mengelola data serta interaksi pengguna secara dinamis.
 
 ## Disusun Oleh
 
@@ -23,7 +23,7 @@ Aplikasi Diary sederhana yang dibuat menggunakan React Native dan Expo sebagai b
    npx expo start
    ```
 
-5. Scan QR Code menggunakan Expo Go pada perangkat Android atau jalankan melalui emulator. Untuk menjalankan melalui browser, tekan `w` pada terminal Expo.
+5. Scan QR Code menggunakan Expo Go atau jalankan melalui emulator. Untuk menjalankan melalui browser, tekan `w` pada terminal Expo.
 
 ## Dependency
 
@@ -35,13 +35,30 @@ Project ini menggunakan:
 
 ## Fitur yang Diselesaikan
 
-- 
+- **DiaryCard:** Menampilkan entri menggunakan props dan callback.
+- **SearchBar:** Mencari entri secara dinamis berdasarkan judul, tanggal, atau ringkasan.
+- **EntryForm:** Menambahkan entri baru melalui controlled form.
+- **Like:** Mengubah status suka tanpa memuat ulang aplikasi.
+- **Detail Modal:** Menampilkan informasi lengkap entri yang dipilih.
+- **State Management:** Mengelola `entries`, `query`, `likedIds`, dan `selected` menggunakan `useState`, serta memfilter data dengan `useMemo`.
+- **Local Assets:** Menggunakan gambar lokal untuk menampilkan mood pada DiaryCard.
+
+## Penerapan Props dan State
+
+**Props** digunakan untuk mengirim data dan callback dari `DiaryListScreen` ke komponen seperti `DiaryCard`, `SearchBar`, dan `EntryForm`.
+
+**State** digunakan untuk menyimpan dan memperbarui data aplikasi. Perubahan state secara otomatis memperbarui tampilan tanpa perlu menjalankan ulang aplikasi.
 
 ## Screenshot
 
-### Tampilan 1 Kolom (Mobile)
+### Sebelum Penambahan Entri
 
 <p align="center">
-  <img src="./assets/screenshots/mobile.png" width="280" alt="Tampilan Diary App 1 Kolom">
+  <img src="./assets/screenshots/before.png" width="280" alt="Tampilan sebelum penambahan entri">
 </p>
 
+### Sesudah Penambahan Entri
+
+<p align="center">
+  <img src="./assets/screenshots/after.png" width="280" alt="Tampilan sesudah penambahan entri">
+</p>
