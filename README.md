@@ -14,6 +14,7 @@ Repository ini digunakan untuk mengumpulkan dan mendokumentasikan hasil praktiku
 | Pertemuan 2 | Struktur Project dan Komponen Dasar | [Lihat Praktikum](https://github.com/muhamaddikrulloh/diary-app/tree/pertemuan-2) |
 | Pertemuan 3 | Desain UI dengan Flexbox & StyleSheet; Layout Responsif | [Lihat Praktikum](https://github.com/muhamaddikrulloh/diary-app/tree/pertemuan-3) |
 | Pertemuan 4 | Props dan State pada React Native | [Lihat Praktikum](https://github.com/muhamaddikrulloh/diary-app/tree/pertemuan-4) |
+| Pertemuan 5 | Navigasi pada React Native | [Lihat Praktikum](https://github.com/muhamaddikrulloh/diary-app/tree/pertemuan-5) |
 
 ## Keterangan
 
