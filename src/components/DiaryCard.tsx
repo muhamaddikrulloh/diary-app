@@ -1,17 +1,5 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  Pressable,
-} from 'react-native';
-import {
-  COLORS,
-  SPACE,
-  RADIUS,
-  TYPO,
-} from '../styles/tokens';
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { COLORS, RADIUS, SPACE, TYPO } from "../styles/tokens";
 type Props = {
   title: string;
   date: string;
@@ -21,14 +9,15 @@ type Props = {
   onPress?: () => void;
   onToggleLike?: () => void;
 };
+
 export default function DiaryCard({
   title,
   date,
   preview,
   moodImage,
   liked = false,
-  onPress = () => { },
-  onToggleLike = () => { },
+  onPress = () => {},
+  onToggleLike = () => {},
 }: Props) {
   return (
     <View style={styles.card}>
@@ -37,24 +26,13 @@ export default function DiaryCard({
         style={styles.main}
         accessibilityLabel={`Buka entri ${title}`}
       >
-        <Image
-          source={moodImage}
-          style={styles.mood}
-        />
+        <Image source={moodImage} style={styles.mood} />
         <View style={styles.content}>
-          <Text
-            style={styles.title}
-            numberOfLines={1}
-          >
+          <Text style={styles.title} numberOfLines={1}>
             {title}
           </Text>
-          <Text style={styles.date}>
-            {date}
-          </Text>
-          <Text
-            style={styles.preview}
-            numberOfLines={2}
-          >
+          <Text style={styles.date}>{date}</Text>
+          <Text style={styles.preview} numberOfLines={2}>
             {preview}
           </Text>
         </View>
@@ -62,63 +40,62 @@ export default function DiaryCard({
       <Pressable
         onPress={onToggleLike}
         style={styles.likeButton}
-        accessibilityLabel={
-          liked ? 'Batal suka' : 'Suka'
-        }
+        accessibilityLabel={liked ? "Batal suka" : "Suka"}
       >
-        <Text style={styles.like}>
-          {liked ? '♥' : '♡'}
-        </Text>
+        <Text style={styles.like}>{liked ? "♥" : "♡"}</Text>
       </Pressable>
     </View>
   );
 }
-const styles =
-  StyleSheet.create({
-    card: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      borderWidth: 1,
-      borderColor: COLORS.border,
-      borderRadius: RADIUS.card,
-      backgroundColor: COLORS.surface,
-      overflow: 'hidden',
-    },
-    main: {
-      flex: 1,
-      flexDirection: 'row',
-      gap: SPACE.m,
-      padding: SPACE.m,
-      alignItems: 'center',
-    },
-    mood: {
-      width: 56,
-      height: 56,
-      borderRadius: 28,
-      backgroundColor: '#eef2ff',
-    },
-    content: {
-      flex: 1,
-    },
-    title: {
-      fontSize: TYPO.title,
-      fontWeight: '700',
-      color: COLORS.text,
-    },
-    date: {
-      fontSize: TYPO.caption,
-      color: COLORS.muted,
-      marginBottom: 4,
-    },
-    preview: {
-      fontSize: TYPO.body,
-      color: COLORS.text,
-    },
-    likeButton: {
-      padding: SPACE.m,
-    },
-    like: {
-      fontSize: 26,
-      color: '#ef4444',
-    },
-  });
+
+const styles = StyleSheet.create({
+  card: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: RADIUS.card,
+    backgroundColor: COLORS.surface,
+    overflow: "hidden",
+  },
+  main: {
+    flex: 1,
+    minWidth: 0,
+    flexDirection: "row",
+    gap: SPACE.m,
+    padding: SPACE.m,
+    alignItems: "center",
+  },
+  content: {
+    flex: 1,
+    minWidth: 0,
+  },
+  likeButton: {
+    padding: SPACE.m,
+    flexShrink: 0,
+  },
+  mood: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: "#eef2ff",
+  },
+  title: {
+    fontSize: TYPO.title,
+    fontWeight: "700",
+    color: COLORS.text,
+  },
+  date: {
+    fontSize: TYPO.caption,
+    color: COLORS.muted,
+    marginBottom: 4,
+  },
+  preview: {
+    fontSize: TYPO.body,
+    color: COLORS.text,
+  },
+  like: {
+    fontSize: 26,
+    color: "#ef4444",
+  },
+});

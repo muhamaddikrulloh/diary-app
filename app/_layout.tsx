@@ -1,9 +1,7 @@
-import React from 'react';
-import { Stack } from 'expo-router';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import {
-  EntriesProvider,
-} from '../src/context/EntriesContext';
+import React from "react";
+import { Stack } from "expo-router";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { EntriesProvider } from "../src/context/EntriesContext";
 export default function RootLayout() {
   return (
     <SafeAreaProvider>
@@ -18,7 +16,7 @@ export default function RootLayout() {
           <Stack.Screen
             name="detail/[id]"
             options={{
-              title: 'Detail Diary',
+              title: "Detail Diary",
             }}
           />
         </Stack>

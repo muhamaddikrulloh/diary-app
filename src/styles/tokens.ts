@@ -1,9 +1,9 @@
 export const COLORS = {
-  surface: '#FFFFFF',
-  border: '#E5E7EB',
-  text: '#111827',
-  muted: '#6B7280',
-  accent: '#2563EB',
+  surface: "#FFFFFF",
+  border: "#E5E7EB",
+  text: "#111827",
+  muted: "#6B7280",
+  accent: "#2563EB",
 };
 export const SPACE = {
   xs: 4,
