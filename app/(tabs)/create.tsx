@@ -1,23 +1,18 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useDiary } from '../../src/context/EntriesContext';
-import { COLORS, SPACE, RADIUS } from '../../src/styles/tokens';
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { useDiary } from "../../src/context/DiaryContext";
+import { COLORS, RADIUS, SPACE } from "../../src/styles/tokens";
 
-const MOODS = [
-  '🎯',
-  '😞',
-  '😴',
-  '😊',
-];
+const MOODS = ["🎯", "😞", "😴", "😊"];
 
 export default function CreateScreen() {
   const router = useRouter();
   const { addEntry } = useDiary();
-  const [title, setTitle] = useState('');
-  const [date, setDate] = useState('2026-11-02');
-  const [body, setBody] = useState('');
-  const [mood, setMood] = useState('😊');
+  const [title, setTitle] = useState("");
+  const [date, setDate] = useState("2026-11-02");
+  const [body, setBody] = useState("");
+  const [mood, setMood] = useState("😊");
   const canSave = title.trim().length > 0 && body.trim().length > 0;
 
   const save = () => {
@@ -29,10 +24,10 @@ export default function CreateScreen() {
       body: body.trim(),
       mood,
     });
-    setTitle('');
-    setBody('');
-    setMood('😊');
-    router.replace('/');
+    setTitle("");
+    setBody("");
+    setMood("😊");
+    router.replace("/");
   };
 
   return (
@@ -89,24 +84,24 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   input: {
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: RADIUS.card,
     padding: 12,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   bodyInput: {
     minHeight: 120,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
   label: {
-    fontWeight: '700',
+    fontWeight: "700",
   },
   moodRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: SPACE.s,
   },
   moodButton: {
@@ -114,7 +109,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: 12,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   moodSelected: {
     borderColor: COLORS.accent,
@@ -127,13 +122,13 @@ const styles = StyleSheet.create({
     padding: 14,
     backgroundColor: COLORS.accent,
     borderRadius: RADIUS.card,
-    alignItems: 'center',
+    alignItems: "center",
   },
   disabled: {
     opacity: 0.45,
   },
   saveText: {
-    color: '#fff',
-    fontWeight: '700',
+    color: "#fff",
+    fontWeight: "700",
   },
 });

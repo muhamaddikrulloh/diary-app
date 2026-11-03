@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
-import { DiaryEntry } from '../context/EntriesContext';
+import { useEffect, useMemo, useState } from "react";
+import { DiaryEntry } from "../context/DiaryContext";
 
 export function useDiarySearch(entries: DiaryEntry[]) {
-  const [query, setQuery] = useState('');
-  const [debouncedQuery, setDebouncedQuery] = useState('');
+  const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -23,7 +23,7 @@ export function useDiarySearch(entries: DiaryEntry[]) {
       (entry) =>
         entry.title.toLowerCase().includes(q) ||
         entry.preview.toLowerCase().includes(q) ||
-        entry.date.toLowerCase().includes(q)
+        entry.date.toLowerCase().includes(q),
     );
   }, [entries, debouncedQuery]);
 

@@ -1,8 +1,7 @@
-import React from 'react';
-import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
-import { Stack, useLocalSearchParams } from 'expo-router';
-import { useDiary } from '../../src/context/EntriesContext';
-import { COLORS, SPACE, RADIUS, TYPO } from '../../src/styles/tokens';
+import { Stack, useLocalSearchParams } from "expo-router";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useDiary } from "../../src/context/DiaryContext";
+import { COLORS, RADIUS, SPACE, TYPO } from "../../src/styles/tokens";
 
 export default function DetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -30,9 +29,7 @@ export default function DetailScreen() {
           onPress={() => toggleLike(entry.id)}
           style={styles.likeButton}
         >
-          <Text style={styles.likeText}>
-            {liked ? '♥ Disukai' : '♡ Suka'}
-          </Text>
+          <Text style={styles.likeText}>{liked ? "♥ Disukai" : "♡ Suka"}</Text>
         </Pressable>
       </ScrollView>
     </>
@@ -49,7 +46,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: "700",
     color: COLORS.text,
   },
   date: {
@@ -66,15 +63,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: RADIUS.card,
-    alignItems: 'center',
+    alignItems: "center",
   },
   likeText: {
-    fontWeight: '700',
+    fontWeight: "700",
     color: COLORS.danger,
   },
   center: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

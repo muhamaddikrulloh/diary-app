@@ -1,15 +1,23 @@
-import { useCallback, useRef } from "react";
-import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { useRouter } from "expo-router";
-import { useDiary } from "../../src/context/EntriesContext";
-import { useDiarySearch } from "../../src/hooks/useDiarySearch";
+import { useCallback, useRef } from "react";
+import {
+    FlatList,
+    Pressable,
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
+} from "react-native";
 import DiaryCard from "../../src/components/DiaryCard";
+import { useDiary } from "../../src/context/DiaryContext";
+import { useDiarySearch } from "../../src/hooks/useDiarySearch";
 import { COLORS, SPACE, TYPO } from "../../src/styles/tokens";
 
 export default function HomeScreen() {
   const router = useRouter();
   const { entries, likedIds, toggleLike } = useDiary();
-  const { query, setQuery, filteredEntries, resultCount } = useDiarySearch(entries);
+  const { query, setQuery, filteredEntries, resultCount } =
+    useDiarySearch(entries);
   const searchRef = useRef<React.ElementRef<typeof TextInput>>(null);
 
   const openDetail = useCallback(
@@ -19,7 +27,7 @@ export default function HomeScreen() {
         params: { id: String(id) },
       });
     },
-    [router]
+    [router],
   );
 
   const clearSearch = useCallback(() => {
