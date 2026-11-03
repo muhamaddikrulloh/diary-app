@@ -1,37 +1,50 @@
+import { useCallback, useRef } from "react";
+import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { useRouter } from "expo-router";
-import { useMemo, useState } from "react";
-import { FlatList, StyleSheet, Text, TextInput, View } from "react-native";
+import { useDiary } from "../../src/context/EntriesContext";
+import { useDiarySearch } from "../../src/hooks/useDiarySearch";
 import DiaryCard from "../../src/components/DiaryCard";
-import { useEntries } from "../../src/context/EntriesContext";
 import { COLORS, SPACE, TYPO } from "../../src/styles/tokens";
+
 export default function HomeScreen() {
   const router = useRouter();
+  const { entries, likedIds, toggleLike } = useDiary();
+  const { query, setQuery, filteredEntries, resultCount } = useDiarySearch(entries);
+  const searchRef = useRef<React.ElementRef<typeof TextInput>>(null);
 
-  const { entries, likedIds, toggleLike } = useEntries();
+  const openDetail = useCallback(
+    (id: number) => {
+      router.push({
+        pathname: "/detail/[id]",
+        params: { id: String(id) },
+      });
+    },
+    [router]
+  );
 
-  const [query, setQuery] = useState("");
+  const clearSearch = useCallback(() => {
+    setQuery("");
+    searchRef.current?.focus();
+  }, [setQuery]);
 
-  const data = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return entries;
-    return entries.filter(
-      (entry) =>
-        entry.title.toLowerCase().includes(q) ||
-        entry.preview.toLowerCase().includes(q) ||
-        entry.date.toLowerCase().includes(q),
-    );
-  }, [entries, query]);
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Buku Harian</Text>
-      <TextInput
-        value={query}
-        onChangeText={setQuery}
-        placeholder="Cari entri..."
-        style={styles.search}
-      />
+      <View style={styles.searchRow}>
+        <TextInput
+          ref={searchRef}
+          value={query}
+          onChangeText={setQuery}
+          placeholder="Cari diary..."
+          style={styles.search}
+        />
+        <Pressable onPress={clearSearch} style={styles.clearButton}>
+          <Text>Clear</Text>
+        </Pressable>
+      </View>
+      <Text style={styles.counter}>{resultCount} entri ditemukan</Text>
       <FlatList
-        data={data}
+        data={filteredEntries}
         keyExtractor={(item) => String(item.id)}
         contentContainerStyle={styles.list}
         renderItem={({ item }) => (
@@ -39,19 +52,15 @@ export default function HomeScreen() {
             title={item.title}
             date={item.date}
             preview={item.preview}
-            moodImage={item.moodImage}
+            mood={item.mood}
             liked={likedIds.has(item.id)}
+            onPress={() => openDetail(item.id)}
             onToggleLike={() => toggleLike(item.id)}
-            onPress={() =>
-              router.push({
-                pathname: "/detail/[id]",
-                params: {
-                  id: String(item.id),
-                },
-              })
-            }
           />
         )}
+        ListEmptyComponent={
+          <Text style={styles.empty}>Diary tidak ditemukan.</Text>
+        }
       />
     </View>
   );
@@ -61,7 +70,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: SPACE.l,
-    backgroundColor: COLORS.surface,
+    backgroundColor: COLORS.background,
   },
   header: {
     fontSize: TYPO.h1,
@@ -69,15 +78,37 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     marginBottom: SPACE.m,
   },
+  searchRow: {
+    flexDirection: "row",
+    gap: SPACE.s,
+  },
   search: {
+    flex: 1,
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: 12,
     padding: 10,
-    marginBottom: SPACE.m,
+    backgroundColor: "#fff",
+  },
+  clearButton: {
+    justifyContent: "center",
+    paddingHorizontal: 14,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 12,
+    backgroundColor: "#fff",
+  },
+  counter: {
+    color: COLORS.muted,
+    marginVertical: SPACE.s,
   },
   list: {
     gap: SPACE.m,
     paddingBottom: SPACE.xl,
+  },
+  empty: {
+    textAlign: "center",
+    color: COLORS.muted,
+    paddingTop: 40,
   },
 });

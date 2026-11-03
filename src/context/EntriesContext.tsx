@@ -1,51 +1,58 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
-export type Entry = {
+import React, { createContext, useContext, useMemo, useState } from 'react';
+
+export type DiaryEntry = {
   id: number;
   title: string;
   date: string;
   preview: string;
   body: string;
-  moodImage: any;
+  mood: string;
 };
 
-type EntriesContextType = {
-  entries: Entry[];
-  addEntry: (entry: Omit<Entry, "id">) => void;
-  getById: (id: string | number) => Entry | undefined;
+type DiaryContextType = {
+  entries: DiaryEntry[];
   likedIds: Set<number>;
+  addEntry: (entry: Omit<DiaryEntry, 'id'>) => void;
   toggleLike: (id: number) => void;
+  getById: (id: string | number) => DiaryEntry | undefined;
 };
-const EntriesContext = createContext<EntriesContextType | null>(null);
-const INITIAL_ENTRIES: Entry[] = [
+
+const DiaryContext = createContext<DiaryContextType | null>(null);
+const INITIAL_ENTRIES: DiaryEntry[] = [
   {
     id: 1,
-    title: "Pagi yang Tenang",
-    date: "2026-10-24",
-    preview: "Jalan pagi 20 menit dan menikmati udara segar.",
-    body: "Hari ini aku bangun lebih pagi dan berjalan kaki selama 20 menit.",
-    moodImage: require("../../assets/moods/calm.png"),
+    title: 'Pagi yang Tenang',
+    date: '2026-11-02',
+    preview: 'Jalan pagi 20 menit sebelum memulai aktivitas.',
+    body: `Pagi ini terasa tenang. Saya berjalan selama 20 menit dan
+menyiapkan agenda hari ini.`,
+    mood: '😊',
   },
   {
     id: 2,
-    title: "Produktif di Kampus",
-    date: "2026-10-23",
-    preview: "Menyelesaikan modul praktikum dan berdiskusi dengan tim.",
-    body: "Hari ini cukup produktif karena beberapa target perkuliahan selesai.",
-    moodImage: require("../../assets/moods/focus.png"),
+    title: 'Produktif di Kampus',
+    date: '2026-11-01',
+    preview: 'Menyelesaikan modul dan berdiskusi dengan tim.',
+    body: `Hari ini cukup produktif karena beberapa target perkuliahan
+selesai.`,
+    mood: '🎯',
   },
   {
     id: 3,
-    title: "Senja di Taman",
-    date: "2026-10-22",
-    preview: "Membaca buku sambil menikmati suasana senja.",
-    body: "Sore ini saya menikmati waktu di taman sambil membaca buku.",
-    moodImage: require("../../assets/moods/happy.png"),
+    title: 'Senja dan Buku',
+    date: '2026-10-31',
+    preview: 'Membaca buku sambil menikmati sore.',
+    body: `Sore ini saya menikmati waktu membaca buku dengan suasana yang
+santai.`,
+    mood: '😊',
   },
 ];
-export function EntriesProvider({ children }: { children: React.ReactNode }) {
-  const [entries, setEntries] = useState<Entry[]>(INITIAL_ENTRIES);
+
+export function DiaryProvider({ children }: { children: React.ReactNode }) {
+  const [entries, setEntries] = useState<DiaryEntry[]>(INITIAL_ENTRIES);
   const [likedIds, setLikedIds] = useState<Set<number>>(new Set());
-  const addEntry = (entry: Omit<Entry, "id">) => {
+
+  const addEntry = (entry: Omit<DiaryEntry, 'id'>) => {
     setEntries((prev) => [
       {
         id: Date.now(),
@@ -54,9 +61,7 @@ export function EntriesProvider({ children }: { children: React.ReactNode }) {
       ...prev,
     ]);
   };
-  const getById = (id: string | number) => {
-    return entries.find((entry) => entry.id === Number(id));
-  };
+
   const toggleLike = (id: number) => {
     setLikedIds((prev) => {
       const next = new Set(prev);
@@ -64,24 +69,25 @@ export function EntriesProvider({ children }: { children: React.ReactNode }) {
       return next;
     });
   };
+
+  const getById = (id: string | number) => {
+    return entries.find((entry) => entry.id === Number(id));
+  };
+
   const value = useMemo(
-    () => ({
-      entries,
-      addEntry,
-      getById,
-      likedIds,
-      toggleLike,
-    }),
-    [entries, likedIds],
+    () => ({ entries, likedIds, addEntry, toggleLike, getById }),
+    [entries, likedIds]
   );
+
   return (
-    <EntriesContext.Provider value={value}>{children}</EntriesContext.Provider>
+    <DiaryContext.Provider value={value}>{children}</DiaryContext.Provider>
   );
 }
-export function useEntries() {
-  const value = useContext(EntriesContext);
-  if (!value) {
-    throw new Error("useEntries harus berada di dalam EntriesProvider");
+
+export function useDiary() {
+  const context = useContext(DiaryContext);
+  if (!context) {
+    throw new Error('useDiary harus digunakan di dalam DiaryProvider');
   }
-  return value;
+  return context;
 }

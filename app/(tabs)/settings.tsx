@@ -1,16 +1,19 @@
-import { useRouter } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useState } from 'react';
+import { View, Text, Switch, StyleSheet } from 'react-native';
 
 export default function SettingsScreen() {
-  const router = useRouter();
-
+  const [compactMode, setCompactMode] = useState(false);
   return (
     <View style={styles.container}>
-      <Text>Halaman ini dapat dikembangkan pada praktikum berikutnya.</Text>
-
-      <Pressable style={styles.button} onPress={() => router.push("/about")}>
-        <Text style={styles.buttonText}>Tentang Aplikasi</Text>
-      </Pressable>
+      <Text style={styles.title}>Pengaturan</Text>
+      <View style={styles.row}>
+        <Text>Compact Mode</Text>
+        <Switch value={compactMode} onValueChange={setCompactMode} />
+      </View>
+      <Text style={styles.info}>
+        State: {' '}
+        {compactMode ? 'Aktif' : 'Nonaktif'}
+      </Text>
     </View>
   );
 }
@@ -20,15 +23,18 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  button: {
-    backgroundColor: "#2563EB",
-    padding: 14,
-    borderRadius: 10,
-    alignItems: "center",
-    marginTop: 16,
+  title: {
+    fontSize: 24,
+    fontWeight: '700',
+    marginBottom: 20,
   },
-  buttonText: {
-    color: "#FFFFFF",
-    fontWeight: "600",
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  info: {
+    marginTop: 12,
+    color: '#6B7280',
   },
 });

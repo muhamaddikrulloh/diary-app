@@ -1,29 +1,18 @@
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import {
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import { useEntries } from "../../src/context/EntriesContext";
-import { COLORS, RADIUS, SPACE, TYPO } from "../../src/styles/tokens";
+import React from 'react';
+import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
+import { Stack, useLocalSearchParams } from 'expo-router';
+import { useDiary } from '../../src/context/EntriesContext';
+import { COLORS, SPACE, RADIUS, TYPO } from '../../src/styles/tokens';
 
 export default function DetailScreen() {
-  const router = useRouter();
-
-  const { id } = useLocalSearchParams<{
-    id: string;
-  }>();
-
-  const { getById, likedIds, toggleLike } = useEntries();
-
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { getById, likedIds, toggleLike } = useDiary();
   const entry = getById(id);
+
   if (!entry) {
     return (
       <View style={styles.center}>
-        <Text>Entri tidak ditemukan.</Text>
+        <Text>Diary tidak ditemukan.</Text>
       </View>
     );
   }
@@ -31,17 +20,9 @@ export default function DetailScreen() {
   const liked = likedIds.has(entry.id);
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: entry.title,
-        }}
-      />
-      <ScrollView contentContainerStyle={styles.content}>
-        <Image
-          source={entry.moodImage}
-          style={styles.hero}
-          resizeMode="cover"
-        />
+      <Stack.Screen options={{ title: entry.title }} />
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.mood}>{entry.mood}</Text>
         <Text style={styles.title}>{entry.title}</Text>
         <Text style={styles.date}>{entry.date}</Text>
         <Text style={styles.body}>{entry.body}</Text>
@@ -49,13 +30,9 @@ export default function DetailScreen() {
           onPress={() => toggleLike(entry.id)}
           style={styles.likeButton}
         >
-          <Text style={styles.likeText}>{liked ? "♥ Disukai" : "♡ Suka"}</Text>
-        </Pressable>
-        <Pressable
-          onPress={() => router.replace("/")}
-          style={styles.homeButton}
-        >
-          <Text style={styles.homeButtonText}>Kembali ke Home</Text>
+          <Text style={styles.likeText}>
+            {liked ? '♥ Disukai' : '♡ Suka'}
+          </Text>
         </Pressable>
       </ScrollView>
     </>
@@ -63,19 +40,16 @@ export default function DetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  content: {
+  container: {
     padding: SPACE.l,
     gap: SPACE.m,
   },
-  hero: {
-    width: "100%",
-    height: 200,
-    borderRadius: RADIUS.card,
-    backgroundColor: "#eef2ff",
+  mood: {
+    fontSize: 64,
   },
   title: {
-    fontSize: 22,
-    fontWeight: "700",
+    fontSize: 24,
+    fontWeight: '700',
     color: COLORS.text,
   },
   date: {
@@ -84,35 +58,23 @@ const styles = StyleSheet.create({
   },
   body: {
     fontSize: TYPO.body,
-    color: COLORS.text,
     lineHeight: 22,
+    color: COLORS.text,
   },
   likeButton: {
+    padding: SPACE.m,
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: RADIUS.card,
-    padding: SPACE.m,
-    alignItems: "center",
+    alignItems: 'center',
   },
   likeText: {
-    color: "#ef4444",
-    fontWeight: "700",
+    fontWeight: '700',
+    color: COLORS.danger,
   },
   center: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  homeButton: {
-    backgroundColor: COLORS.accent,
-    borderRadius: RADIUS.card,
-    padding: SPACE.m,
-    alignItems: "center",
-    marginTop: SPACE.s,
-  },
-  homeButtonText: {
-    color: "#FFFFFF",
-    fontWeight: "700",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
