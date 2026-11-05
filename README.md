@@ -1,6 +1,6 @@
-# Diary App - Pertemuan 5
+# Diary App - Pertemuan 6
 
-Aplikasi Diary sederhana berbasis React Native dan Expo yang dikembangkan sebagai bagian dari praktikum Pemrograman Mobile Multiplatform. Pada pertemuan ini, aplikasi menerapkan navigasi menggunakan **Expo Router**, meliputi **Stack Navigation**, **Bottom Tabs**, dan **Dynamic Route**, serta **Context API** untuk berbagi data antarhalaman.
+Aplikasi Diary berbasis React Native dan Expo yang dikembangkan untuk praktikum Pemrograman Mobile Multiplatform. Pada pertemuan ini, aplikasi menerapkan React Hooks untuk pencarian, filter mood, pengelolaan Favorites, dan sinkronisasi status Like.
 
 ## Disusun Oleh
 
@@ -9,10 +9,10 @@ Aplikasi Diary sederhana berbasis React Native dan Expo yang dikembangkan sebaga
 
 ## Cara Menjalankan Project
 
-1. Clone repository pada branch `pertemuan-5`:
+1. Clone repository pada branch `pertemuan-6`:
 
    ```bash
-   git clone -b pertemuan-5 https://github.com/muhamaddikrulloh/diary-app.git
+   git clone -b pertemuan-6 https://github.com/muhamaddikrulloh/diary-app.git
    ```
 
 2. Masuk ke folder project:
@@ -27,81 +27,51 @@ Aplikasi Diary sederhana berbasis React Native dan Expo yang dikembangkan sebaga
    npm install
    ```
 
-4. Jalankan aplikasi menggunakan Expo:
+4. Jalankan aplikasi:
 
    ```bash
    npx expo start
    ```
 
-5. Scan QR Code menggunakan Expo Go atau jalankan melalui emulator. Untuk menjalankan melalui browser, tekan `w` pada terminal Expo.
+5. Buka aplikasi melalui Expo Go atau emulator.
 
-## Dependency
+## Penerapan React Hooks
 
-Project ini menggunakan:
+| Hook          | Input             | Output                       | Dependency                                  | Alasan Penggunaan                                       |
+| ------------- | ----------------- | ---------------------------- | ------------------------------------------- | ------------------------------------------------------- |
+| `useState`    | Nilai awal state  | State dan setter             | -                                           | Mengelola query pencarian, filter mood, dan input form. |
+| `useContext`  | DiaryContext      | Data dan fungsi dari Context | -                                           | Mengakses data diary dan status Like antarhalaman.      |
+| `useEffect`   | Callback debounce | Cleanup timer                | `query`                                     | Menunda pencarian selama 350 ms dan membersihkan timer. |
+| `useMemo`     | Fungsi filter     | Daftar diary hasil filter    | `entries`, `debouncedQuery`, `selectedMood` | Mengoptimalkan proses pencarian dan filter mood.        |
+| `useCallback` | Fungsi callback   | Referensi fungsi             | `router` atau `setQuery`                    | Menjaga referensi fungsi navigasi dan reset pencarian.  |
+| `useRef`      | `null`            | Referensi TextInput          | -                                           | Mengakses dan mengatur fokus input pencarian.           |
 
-- React Native
-- Expo
-- Expo Router
-- React Context API
-- `@expo/vector-icons` (Ionicons)
+## Penerapan Custom Hook
 
-## Fitur yang Diselesaikan
+Aplikasi menggunakan dua custom hook untuk memisahkan logika pengolahan data dari komponen tampilan.
 
-- **Bottom Tabs:** Navigasi antara Home, Tambah, Favorites, dan Pengaturan dengan ikon yang sesuai.
-- **Home:** Menampilkan daftar diary dan pencarian entri.
-- **Tambah Entri:** Menambahkan catatan baru melalui form dan menampilkannya di Home.
-- **Favorites:** Menampilkan entri yang diberi Like.
-- **Sinkronisasi Like:** Status Like konsisten pada Home, Favorites, dan Detail melalui Context API.
-- **Detail Diary:** Menampilkan isi lengkap entri berdasarkan ID melalui Dynamic Route.
-- **Kembali ke Home:** Tombol pada Detail untuk menuju halaman Home.
-- **Pengaturan dan About:** Halaman tambahan yang dapat dibuka melalui navigasi Stack.
-- **Local Assets:** Menggunakan gambar mood `happy`, `focus`, `calm`, dan `default` pada kartu dan detail diary.
+### 1. useDiarySearch
 
-## Struktur Route
+Custom hook `useDiarySearch` digunakan untuk mengelola pencarian diary berdasarkan judul atau ringkasan serta filter mood. Pencarian menerapkan debounce selama 350 ms menggunakan `useEffect`, sedangkan `useMemo` digunakan untuk memproses hasil filter.
 
-Aplikasi menggunakan Expo Router dengan struktur folder berikut:
+Hook ini menerima `entries` dan `selectedMood`, kemudian menghasilkan `query`, `setQuery`, `filteredEntries`, dan `resultCount`.
 
-```text
-app/
-├── _layout.tsx
-├── about.tsx
-├── (tabs)/
-│   ├── _layout.tsx
-│   ├── index.tsx
-│   ├── create.tsx
-│   ├── favorites.tsx
-│   └── settings.tsx
-└── detail/
-    └── [id].tsx
-```
+### 2. useLikedEntries
 
-## Penerapan Stack, Tabs, dan Dynamic Route
+Custom hook `useLikedEntries` digunakan untuk menampilkan diary yang telah diberi Like pada halaman Favorites. Hook ini menggunakan `useMemo` untuk menyaring data berdasarkan ID diary yang disukai.
 
-- **Stack Navigation:** Mengatur perpindahan dari halaman utama ke halaman lain, seperti Detail Diary dan About, melalui `app/_layout.tsx`.
-- **Bottom Tabs:** Menyediakan empat menu navigasi utama, yaitu Home, Tambah, Favorites, dan Pengaturan, melalui `app/(tabs)/_layout.tsx`.
-- **Dynamic Route:** Menggunakan `app/detail/[id].tsx` untuk menampilkan detail diary berdasarkan parameter `id` dari entri yang dipilih.
-
-Struktur ini memisahkan setiap halaman ke dalam route tersendiri sehingga navigasi lebih terorganisasi.
-
-## Penerapan Context API
-
-**Context API** digunakan untuk berbagi data `entries` dan `likedIds` melalui `EntriesProvider`. Fungsi `addEntry()`, `getById()`, dan `toggleLike()` memungkinkan penambahan entri, pengambilan detail, serta sinkronisasi status Like antarhalaman tanpa meneruskan props secara berulang.
-
-Data diary disimpan sementara menggunakan React State, sehingga entri baru dan status Like dapat kembali ke kondisi awal setelah aplikasi dimuat ulang sepenuhnya.
+Hook menerima `entries` dan `likedIds`, kemudian menghasilkan daftar `likedEntries`.
 
 ## Screenshot
 
-<table>
-  <tr>
-    <td align="center" width="50%"><b>Home</b><br><img src="./assets/screenshots/Home.png" width="280" alt="Home"></td>
-    <td align="center" width="50%"><b>Detail Diary</b><br><img src="./assets/screenshots/Detail.png" width="280" alt="Detail Diary"></td>
-  </tr>
-  <tr>
-    <td align="center"><b>Tambah Entri</b><br><img src="./assets/screenshots/Tambah.png" width="280" alt="Tambah Entri"></td>
-    <td align="center"><b>Favorites</b><br><img src="./assets/screenshots/Favorite.png" width="280" alt="Favorites"></td>
-  </tr>
-  <tr>
-    <td align="center"><b>Pengaturan</b><br><img src="./assets/screenshots/Setting.png" width="280" alt="Pengaturan"></td>
-    <td align="center"><b>Tentang Aplikasi</b><br><img src="./assets/screenshots/About.png" width="280" alt="Tentang Aplikasi"></td>
-  </tr>
-</table>
+|                  Home                  |                   Search                   |
+| :------------------------------------: | :----------------------------------------: |
+| ![Home](./assets/screenshots/Home.png) | ![Search](./assets/screenshots/Search.png) |
+
+|                   Detail                   |                   Create                   |
+| :----------------------------------------: | :----------------------------------------: |
+| ![Detail](./assets/screenshots/Detail.png) | ![Create](./assets/screenshots/Create.png) |
+
+|                   Settings                    |                    Favorites                    |
+| :-------------------------------------------: | :---------------------------------------------: |
+| ![Settings](./assets/screenshots/Settings.png) | ![Favorites](./assets/screenshots/Favorites.png) |
