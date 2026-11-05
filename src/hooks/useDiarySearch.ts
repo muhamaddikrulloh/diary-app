@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { DiaryEntry } from "../context/DiaryContext";
 
-export function useDiarySearch(entries: DiaryEntry[]) {
+export function useDiarySearch(entries: DiaryEntry[], selectedMood: string) {
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
 
@@ -16,16 +16,17 @@ export function useDiarySearch(entries: DiaryEntry[]) {
 
   const filteredEntries = useMemo(() => {
     const q = debouncedQuery.trim().toLowerCase();
-    if (!q) {
-      return entries;
-    }
-    return entries.filter(
-      (entry) =>
+
+    return entries.filter((entry) => {
+      const matchesQuery =
         entry.title.toLowerCase().includes(q) ||
-        entry.preview.toLowerCase().includes(q) ||
-        entry.date.toLowerCase().includes(q),
-    );
-  }, [entries, debouncedQuery]);
+        entry.preview.toLowerCase().includes(q);
+
+      const matchesMood = selectedMood === "" || entry.mood === selectedMood;
+
+      return matchesQuery && matchesMood;
+    });
+  }, [entries, debouncedQuery, selectedMood]);
 
   return {
     query,

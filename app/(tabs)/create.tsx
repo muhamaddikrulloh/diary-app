@@ -1,8 +1,18 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useDiary } from "../../src/context/DiaryContext";
-import { COLORS, RADIUS, SPACE } from "../../src/styles/tokens";
+import { COLORS, SPACE, TYPO } from "../../src/styles/tokens";
 
 const MOODS = ["🎯", "😞", "😴", "😊"];
 
@@ -31,104 +41,177 @@ export default function CreateScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Tambah Diary</Text>
-      <TextInput
-        value={title}
-        onChangeText={setTitle}
-        placeholder="Judul"
-        style={styles.input}
-      />
-      <TextInput
-        value={date}
-        onChangeText={setDate}
-        placeholder="YYYY-MM-DD"
-        style={styles.input}
-      />
-      <TextInput
-        value={body}
-        onChangeText={setBody}
-        placeholder="Ceritakan harimu..."
-        multiline
-        style={[styles.input, styles.bodyInput]}
-      />
-      <Text style={styles.label}>Mood</Text>
-      <View style={styles.moodRow}>
-        {MOODS.map((item) => (
-          <Pressable
-            key={item}
-            onPress={() => setMood(item)}
-            style={[styles.moodButton, mood === item && styles.moodSelected]}
-          >
-            <Text style={styles.mood}>{item}</Text>
-          </Pressable>
-        ))}
-      </View>
-      <Pressable
-        onPress={save}
-        disabled={!canSave}
-        style={[styles.saveButton, !canSave && styles.disabled]}
+    <SafeAreaView edges={["top", "left", "right"]} style={styles.safeArea}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        style={styles.keyboardView}
       >
-        <Text style={styles.saveText}>Simpan</Text>
-      </Pressable>
-    </View>
+        <ScrollView
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
+        >
+          <Text style={styles.heading}>Tambah Diary</Text>
+
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>Judul</Text>
+            <TextInput
+              value={title}
+              onChangeText={setTitle}
+              placeholder="Judul"
+              placeholderTextColor={COLORS.muted}
+              style={styles.input}
+            />
+          </View>
+
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>Tanggal</Text>
+            <TextInput
+              value={date}
+              onChangeText={setDate}
+              placeholder="YYYY-MM-DD"
+              placeholderTextColor={COLORS.muted}
+              style={styles.input}
+            />
+          </View>
+
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>Isi Diary</Text>
+            <TextInput
+              value={body}
+              onChangeText={setBody}
+              placeholder="Ceritakan harimu..."
+              placeholderTextColor={COLORS.muted}
+              multiline
+              style={[styles.input, styles.bodyInput]}
+            />
+          </View>
+
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>Mood</Text>
+            <View style={styles.moodRow}>
+              {MOODS.map((item) => {
+                const isSelected = mood === item;
+                return (
+                  <Pressable
+                    key={item}
+                    onPress={() => setMood(item)}
+                    style={({ pressed }) => [
+                      styles.moodButton,
+                      isSelected && styles.moodSelected,
+                      pressed && styles.pressed,
+                    ]}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: isSelected }}
+                    accessibilityLabel={`Pilih mood ${item}`}
+                  >
+                    <Text style={styles.mood}>{item}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </View>
+
+          <Pressable
+            onPress={save}
+            disabled={!canSave}
+            style={({ pressed }) => [
+              styles.saveButton,
+              !canSave && styles.disabled,
+              canSave && pressed && styles.pressed,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Simpan diary"
+          >
+            <Text style={styles.saveText}>Simpan</Text>
+          </Pressable>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
-    padding: SPACE.l,
-    gap: SPACE.m,
     backgroundColor: COLORS.background,
   },
+  keyboardView: {
+    flex: 1,
+  },
+  container: {
+    paddingHorizontal: SPACE.l,
+    paddingTop: SPACE.l,
+    paddingBottom: SPACE.xl,
+    gap: SPACE.m,
+  },
   heading: {
-    fontSize: 24,
+    fontSize: TYPO.h1,
     fontWeight: "700",
+    color: COLORS.text,
+    marginBottom: SPACE.s,
+  },
+  formGroup: {
+    gap: 6,
+  },
+  label: {
+    fontSize: TYPO.body,
+    fontWeight: "600",
+    color: COLORS.text,
   },
   input: {
     borderWidth: 1,
     borderColor: COLORS.border,
-    borderRadius: RADIUS.card,
-    padding: 12,
-    backgroundColor: "#fff",
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontSize: TYPO.body,
+    color: COLORS.text,
+    backgroundColor: COLORS.surface,
   },
   bodyInput: {
     minHeight: 120,
     textAlignVertical: "top",
-  },
-  label: {
-    fontWeight: "700",
+    lineHeight: 20,
   },
   moodRow: {
     flexDirection: "row",
     gap: SPACE.s,
   },
   moodButton: {
-    padding: 10,
+    width: 48,
+    height: 48,
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: 12,
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.surface,
+    alignItems: "center",
+    justifyContent: "center",
   },
   moodSelected: {
+    backgroundColor: COLORS.accentLight,
     borderColor: COLORS.accent,
-    borderWidth: 2,
+    borderWidth: 1.5,
   },
   mood: {
-    fontSize: 26,
+    fontSize: 22,
   },
   saveButton: {
-    padding: 14,
+    marginTop: SPACE.s,
+    minHeight: 48,
     backgroundColor: COLORS.accent,
-    borderRadius: RADIUS.card,
+    borderRadius: 12,
     alignItems: "center",
+    justifyContent: "center",
   },
   disabled: {
     opacity: 0.45,
   },
+  pressed: {
+    opacity: 0.7,
+  },
   saveText: {
-    color: "#fff",
-    fontWeight: "700",
+    color: "#FFFFFF",
+    fontWeight: "600",
+    fontSize: 15,
   },
 });
