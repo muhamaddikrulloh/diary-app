@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { COLORS, TYPO } from "../styles/tokens";
+
+import { COLORS, RADIUS, SPACE, TYPO } from "../styles/tokens";
 
 type Props = {
   title: string;
@@ -8,7 +9,7 @@ type Props = {
   mood: string;
   liked: boolean;
   onPress: () => void;
-  onToggleLike: () => void;
+  onToggleFavorite: () => void;
 };
 
 export default function DiaryCard({
@@ -18,24 +19,17 @@ export default function DiaryCard({
   mood,
   liked,
   onPress,
-  onToggleLike,
+  onToggleFavorite,
 }: Props) {
   return (
     <View style={styles.card}>
-      <Pressable
-        onPress={onPress}
-        style={({ pressed }) => [styles.main, pressed && styles.pressed]}
-        accessibilityRole="button"
-        accessibilityLabel={`Buka diary: ${title}`}
-      >
-        <View style={styles.moodContainer}>
+      <Pressable onPress={onPress} style={styles.main}>
+        <View style={styles.moodBox}>
           <Text style={styles.mood}>{mood}</Text>
         </View>
 
         <View style={styles.content}>
-          <Text style={styles.title} numberOfLines={1}>
-            {title}
-          </Text>
+          <Text style={styles.title}>{title}</Text>
 
           <Text style={styles.date}>{date}</Text>
 
@@ -45,13 +39,10 @@ export default function DiaryCard({
         </View>
       </Pressable>
 
-      <Pressable
-        onPress={onToggleLike}
-        style={({ pressed }) => [styles.likeButton, pressed && styles.pressed]}
-        accessibilityRole="button"
-        accessibilityLabel={liked ? "Batal sukai diary" : "Sukai diary"}
-      >
-        <Text style={styles.like}>{liked ? "♥" : "♡"}</Text>
+      <Pressable onPress={onToggleFavorite} style={styles.favoriteButton}>
+        <Text style={[styles.favorite, liked && styles.favoriteActive]}>
+          {liked ? "♥" : "♡"}
+        </Text>
       </Pressable>
     </View>
   );
@@ -64,69 +55,63 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.surface,
     borderWidth: 1,
     borderColor: COLORS.border,
-    borderRadius: 12,
+    borderRadius: RADIUS.card,
+    marginBottom: SPACE.m,
+    overflow: "hidden",
   },
 
   main: {
     flex: 1,
     flexDirection: "row",
-    alignItems: "flex-start",
-    paddingVertical: 14,
-    paddingLeft: 14,
-    paddingRight: 4,
-    gap: 12,
+    alignItems: "center",
+    gap: SPACE.m,
+    padding: SPACE.m,
   },
 
-  moodContainer: {
-    width: 42,
-    height: 42,
-    borderRadius: 10,
-    backgroundColor: COLORS.surfaceMuted,
+  moodBox: {
+    width: 58,
+    height: 58,
+    borderRadius: 29,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "#EFF6FF",
   },
 
   mood: {
-    fontSize: 24,
+    fontSize: 30,
   },
 
   content: {
     flex: 1,
-    gap: 4,
   },
 
   title: {
-    fontSize: 15,
-    fontWeight: "600",
+    fontSize: TYPO.title,
+    fontWeight: "700",
     color: COLORS.text,
   },
 
   date: {
     fontSize: TYPO.caption,
     color: COLORS.muted,
+    marginVertical: 4,
   },
 
   preview: {
-    fontSize: 13,
-    lineHeight: 19,
-    color: COLORS.muted,
+    fontSize: TYPO.body,
+    color: COLORS.text,
   },
 
-  likeButton: {
-    width: 44,
-    minHeight: 44,
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "center",
-    marginRight: 6,
+  favoriteButton: {
+    padding: SPACE.l,
   },
 
-  like: {
-    fontSize: 24,
+  favorite: {
+    fontSize: 28,
+    color: "#9CA3AF",
+  },
+
+  favoriteActive: {
     color: COLORS.danger,
-  },
-
-  pressed: {
-    opacity: 0.7,
   },
 });
