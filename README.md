@@ -16,6 +16,8 @@ Repository ini digunakan untuk mengumpulkan dan mendokumentasikan hasil praktiku
 | Pertemuan 4 | Props dan State pada React Native | [Lihat Praktikum](https://github.com/muhamaddikrulloh/diary-app/tree/pertemuan-4) |
 | Pertemuan 5 | Navigasi pada React Native | [Lihat Praktikum](https://github.com/muhamaddikrulloh/diary-app/tree/pertemuan-5) |
 | Pertemuan 6 | State dan Hooks pada React Native | [Lihat Praktikum](https://github.com/muhamaddikrulloh/diary-app/tree/pertemuan-6) |
+| UTS | Pomoro Apps | [Lihat Praktikum](https://github.com/muhamaddikrulloh/pomoro) |
+| Pertemuan 8 | React Redux Toolkit pada React Native | [Lihat Praktikum](https://github.com/muhamaddikrulloh/diary-app/tree/pertemuan-8) |
 
 ## Keterangan
 
