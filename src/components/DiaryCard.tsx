@@ -1,6 +1,6 @@
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-
-import { COLORS, RADIUS, SPACE, TYPO } from "../styles/tokens";
+import { CARD_SHADOW, COLORS, RADIUS, SPACE, TYPO } from "../styles/tokens";
 
 type Props = {
   title: string;
@@ -10,6 +10,7 @@ type Props = {
   liked: boolean;
   onPress: () => void;
   onToggleFavorite: () => void;
+  compact?: boolean;
 };
 
 export default function DiaryCard({
@@ -20,29 +21,31 @@ export default function DiaryCard({
   liked,
   onPress,
   onToggleFavorite,
+  compact = false,
 }: Props) {
   return (
-    <View style={styles.card}>
-      <Pressable onPress={onPress} style={styles.main}>
-        <View style={styles.moodBox}>
-          <Text style={styles.mood}>{mood}</Text>
-        </View>
-
-        <View style={styles.content}>
-          <Text style={styles.title}>{title}</Text>
-
+    <View style={[styles.card, compact && styles.compactCard]}>
+      <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={`Buka diary ${title}`} style={[styles.main, compact && styles.compactMain]}>
+        <View style={styles.meta}>
+          <View style={[styles.moodBox, compact && styles.compactMoodBox]}>
+            <Text style={[styles.mood, compact && styles.compactMood]}>{mood}</Text>
+          </View>
           <Text style={styles.date}>{date}</Text>
-
-          <Text style={styles.preview} numberOfLines={2}>
-            {preview}
-          </Text>
         </View>
+
+        <Text style={[styles.title, compact && styles.compactTitle]} numberOfLines={2}>{title}</Text>
+        <Text style={[styles.preview, compact && styles.compactPreview]} numberOfLines={2}>{preview}</Text>
       </Pressable>
 
-      <Pressable onPress={onToggleFavorite} style={styles.favoriteButton}>
-        <Text style={[styles.favorite, liked && styles.favoriteActive]}>
-          {liked ? "♥" : "♡"}
-        </Text>
+      <Pressable
+        onPress={onToggleFavorite}
+        accessibilityRole="button"
+        accessibilityLabel={liked ? `Hapus ${title} dari Favorite` : `Tambahkan ${title} ke Favorite`}
+        accessibilityState={{ selected: liked }}
+        hitSlop={4}
+        style={({ pressed }) => [styles.favoriteButton, pressed && styles.pressed]}
+      >
+        <Ionicons name={liked ? "heart" : "heart-outline"} size={22} color={liked ? COLORS.accent : COLORS.muted} />
       </Pressable>
     </View>
   );
@@ -51,67 +54,86 @@ export default function DiaryCard({
 const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: COLORS.surface,
+    alignItems: "flex-start",
+    marginBottom: SPACE.m,
+    padding: SPACE.l,
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: RADIUS.card,
-    marginBottom: SPACE.m,
-    overflow: "hidden",
+    backgroundColor: COLORS.surface,
+    ...CARD_SHADOW,
   },
-
+  compactCard: {
+    marginBottom: 0,
+    padding: SPACE.m,
+    borderWidth: 0,
+    borderRadius: 0,
+    shadowOpacity: 0,
+    elevation: 0,
+  },
   main: {
     flex: 1,
+    minWidth: 0,
+    gap: SPACE.s,
+  },
+  compactMain: {
+    gap: SPACE.xs,
+  },
+  meta: {
     flexDirection: "row",
     alignItems: "center",
-    gap: SPACE.m,
-    padding: SPACE.m,
+    gap: SPACE.s,
   },
-
   moodBox: {
-    width: 58,
-    height: 58,
-    borderRadius: 29,
+    width: 34,
+    height: 34,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#EFF6FF",
+    borderRadius: RADIUS.small,
+    backgroundColor: COLORS.accentSoft,
   },
-
+  compactMoodBox: {
+    width: 28,
+    height: 28,
+  },
   mood: {
-    fontSize: 30,
+    fontSize: 18,
   },
-
-  content: {
-    flex: 1,
+  compactMood: {
+    fontSize: 16,
   },
-
+  date: {
+    color: COLORS.muted,
+    fontSize: TYPO.caption,
+  },
   title: {
+    color: COLORS.text,
     fontSize: TYPO.title,
     fontWeight: "700",
-    color: COLORS.text,
+    lineHeight: 23,
   },
-
-  date: {
-    fontSize: TYPO.caption,
-    color: COLORS.muted,
-    marginVertical: 4,
-  },
-
-  preview: {
+  compactTitle: {
     fontSize: TYPO.body,
-    color: COLORS.text,
+    lineHeight: 20,
   },
-
+  preview: {
+    color: COLORS.muted,
+    fontSize: TYPO.body,
+    lineHeight: 22,
+  },
+  compactPreview: {
+    fontSize: TYPO.caption,
+    lineHeight: 18,
+  },
   favoriteButton: {
-    padding: SPACE.l,
+    width: 44,
+    height: 44,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: -SPACE.xs,
+    marginRight: -SPACE.s,
   },
-
-  favorite: {
-    fontSize: 28,
-    color: "#9CA3AF",
-  },
-
-  favoriteActive: {
-    color: COLORS.danger,
+  pressed: {
+    opacity: 0.65,
   },
 });

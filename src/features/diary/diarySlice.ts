@@ -65,12 +65,39 @@ const diarySlice = createSlice({
       });
     },
 
+    editDiary: (
+      state,
+      action: PayloadAction<{
+        id: number;
+        title: string;
+        body: string;
+        mood: string;
+      }>,
+    ) => {
+      const { id, title, body, mood } = action.payload;
+
+      const entry = state.entries.find((item) => item.id === id);
+
+      if (entry) {
+        entry.title = title;
+        entry.body = body;
+        entry.preview = body.slice(0, 100);
+        entry.mood = mood;
+      }
+    },
+
     toggleFavorite: (state, action: PayloadAction<number>) => {
       const entry = state.entries.find((item) => item.id === action.payload);
 
       if (entry) {
         entry.liked = !entry.liked;
       }
+    },
+
+    clearAllFavorites: (state) => {
+      state.entries.forEach((entry) => {
+        entry.liked = false;
+      });
     },
 
     deleteDiary: (state, action: PayloadAction<number>) => {
@@ -85,7 +112,7 @@ const diarySlice = createSlice({
   },
 });
 
-export const { addDiary, toggleFavorite, deleteDiary, setFilter } =
+export const { addDiary, editDiary, toggleFavorite, clearAllFavorites, deleteDiary, setFilter } =
   diarySlice.actions;
 
 export default diarySlice.reducer;
