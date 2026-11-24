@@ -1,6 +1,6 @@
 # Diary App - Pertemuan 9: CRUD Diary App (Dasar)
 
-Aplikasi Diary berbasis React Native dan Expo yang dikembangkan untuk praktikum mata kuliah **Pemrograman Mobile Multiplatform**. Pada pertemuan 9 ini, aplikasi menerapkan arsitektur full-stack end-to-end yang mengintegrasikan frontend mobile, state management global, RESTful API backend, dan database relasional MySQL serta pengujian komprehensif menggunakan Postman.
+Aplikasi Diary berbasis React Native dan Expo yang dikembangkan untuk praktikum mata kuliah Pemrograman Mobile Multiplatform. Pada pertemuan 9 ini, aplikasi menerapkan arsitektur full-stack end-to-end yang mengintegrasikan frontend mobile, state management global, RESTful API backend, dan database relasional MySQL serta pengujian komprehensif menggunakan Postman.
 
 ---
 
@@ -8,9 +8,7 @@ Aplikasi Diary berbasis React Native dan Expo yang dikembangkan untuk praktikum 
 
 - **Nama:** Muhamad Dikrulloh
 - **NIM:** 2430511076
-- **Program Studi:** Teknik Informatika
-- **Fakultas:** Sains dan Teknologi
-- **Perguruan Tinggi:** Universitas Muhammadiyah Sukabumi
+- **Kelas:** 5B
 
 ---
 
@@ -24,36 +22,9 @@ Aplikasi Diary berbasis React Native dan Expo yang dikembangkan untuk praktikum 
 
 ---
 
-## Alur Data Aplikasi (Data Flow)
-
-Sesuai dengan panduan modul praktikum, alur data aplikasi berjalan satu arah:
-
-```text
-React Native Screen (UI)
-        ↓
-    dispatch()
-        ↓
-Redux Toolkit (createAsyncThunk)
-        ↓
-api.ts (fetch HTTP Client)
-        ↓
-Express.js REST API (Port 3000)
-        ↓
-MySQL Database (diary_app)
-        ↓
-JSON Response
-        ↓
-Redux Store (diarySlice)
-        ↓
-UI Diperbarui Otomatis
-```
-
----
-
 ## Struktur Direktori Project
 
 ```text
-.
 ├── app/
 │   ├── (tabs)/
 │   │   ├── _layout.tsx      # Tab Navigator (Home & Tambah)
@@ -69,25 +40,11 @@ UI Diperbarui Otomatis
 │   ├── diarySlice.ts        # Redux Slice & Async Thunks
 │   ├── hooks.ts             # Typed hooks (useAppDispatch, useAppSelector)
 │   └── store.ts             # Redux Store Configuration
-├── backend/
-│   ├── src/
-│   │   └── server.js        # Express.js REST API Server
-│   ├── package.json         # Dependency backend
-│   └── schema.sql           # Skema DDL dan seed data MySQL
-├── postman/
-│   └── Diary_App_API.postman_collection.json # Postman Collection v2.1
-└── assets/
-    └── screenshots/
-        ├── Home.png
-        ├── Create.png
-        ├── Detail.png
-        ├── Edit.png
-        └── postman/
-            ├── 01_GET_all_diaries.png
-            ├── 02_GET_single_diary.png
-            ├── 03_POST_create_diary.png
-            ├── 04_PUT_update_diary.png
-            └── 05_DELETE_diary.png
+└── backend/
+    ├── src/
+    │   └── server.js        # Express.js REST API Server
+    ├── package.json         # Dependency backend
+    └── schema.sql           # Skema DDL dan seed data MySQL
 ```
 
 ---
@@ -96,7 +53,7 @@ UI Diperbarui Otomatis
 
 ### 1. Persiapan Database MySQL
 
-1. Pastikan layanan MySQL/MariaDB (misal: Laragon, XAMPP) telah aktif.
+1. Pastikan MySQL/MariaDB (misal: Laragon, XAMPP) telah aktif.
 2. Eksekusi script SQL yang berada di `backend/schema.sql` untuk membuat database `diary_app` dan tabel `diaries`.
 
 ```sql
@@ -158,12 +115,6 @@ CREATE TABLE IF NOT EXISTS diaries (
 ---
 
 ## Dokumentasi Pengujian REST API dengan Postman
-
-Pengujian endpoint REST API dilakukan mengacu pada **Poin 10 Modul Praktikum 09** untuk memastikan seluruh fungsi CRUD pada backend berjalan normal sebelum dihubungkan ke aplikasi mobile.
-
-File koleksi Postman siap pakai telah disediakan di:  
-📂 `postman/Diary_App_API.postman_collection.json` *(Format Collection v2.1)*.
-
 ### Ringkasan Endpoint
 
 | No | Operasi | HTTP Method | Endpoint | Status Code | Deskripsi |
@@ -178,7 +129,7 @@ File koleksi Postman siap pakai telah disediakan di:
 
 ### Bukti Pengujian Postman
 
-#### 1. Test GET Semua Diary (10.1)
+#### 1. Test GET Semua Diary
 - **Method:** `GET`
 - **URL:** `http://localhost:3000/api/diaries`
 - **Hasil:** Status `200 OK`, mengembalikan array data diary berformat JSON.
@@ -187,7 +138,7 @@ File koleksi Postman siap pakai telah disediakan di:
 
 ---
 
-#### 2. Test GET Satu Diary (10.2)
+#### 2. Test GET Satu Diary
 - **Method:** `GET`
 - **URL:** `http://localhost:3000/api/diaries/1`
 - **Hasil:** Status `200 OK`, mengembalikan satu objek diary lengkap dengan atribut `id`, `title`, `diary_date`, `body`, `mood`, dan `created_at`.
@@ -196,7 +147,7 @@ File koleksi Postman siap pakai telah disediakan di:
 
 ---
 
-#### 3. Test POST / Create Diary (10.3)
+#### 3. Test POST / Create Diary
 - **Method:** `POST`
 - **URL:** `http://localhost:3000/api/diaries`
 - **Headers:** `Content-Type: application/json`
@@ -215,7 +166,7 @@ File koleksi Postman siap pakai telah disediakan di:
 
 ---
 
-#### 4. Test PUT / Update Diary (10.4)
+#### 4. Test PUT / Update Diary
 - **Method:** `PUT`
 - **URL:** `http://localhost:3000/api/diaries/9`
 - **Headers:** `Content-Type: application/json`
@@ -234,7 +185,7 @@ File koleksi Postman siap pakai telah disediakan di:
 
 ---
 
-#### 5. Test DELETE Diary (10.5)
+#### 5. Test DELETE Diary
 - **Method:** `DELETE`
 - **URL:** `http://localhost:3000/api/diaries/9`
 - **Hasil:** Status `200 OK`, mengembalikan pesan konfirmasi:
@@ -249,8 +200,6 @@ File koleksi Postman siap pakai telah disediakan di:
 ---
 
 ## Dokumentasi Antarmuka Aplikasi Mobile
-
-Berikut adalah tampilan visual setiap halaman pada aplikasi **Diary App** yang telah terintegrasi penuh dengan backend Express dan database MySQL:
 
 ### 1. Home Screen (`/`)
 Menampilkan daftar buku harian yang diambil secara otomatis dari database MySQL melalui Redux Toolkit saat halaman dibuka. Emoji mood tersimpan dan ter-render langsung (`😊`, `🎯`).
@@ -277,29 +226,3 @@ Menampilkan isi catatan harian secara lengkap beserta emoji mood berukuran besar
 Form pengeditan data diary yang secara otomatis memuat (pre-fill) nilai judul, isi, dan mood yang ada sebelumnya. Menekan tombol **Simpan Perubahan** akan memicu `PUT` request ke backend dan mengembalikan tampilan ke halaman detail dengan data terbaru.
 
 ![Edit Screen](assets/screenshots/Edit.png)
-
----
-
-## Checklist Akhir Praktikum
-
-Berdasarkan **Checklist Akhir Mahasiswa (Poin 27 Modul Praktikum 09)**:
-
-- [x] Node.js dan npm siap digunakan.
-- [x] MySQL aktif dan service berjalan normal.
-- [x] Project backend dibuat terstruktur.
-- [x] Dependencies backend terpasang (`express`, `mysql2`, `cors`, `dotenv`, `nodemon`).
-- [x] `schema.sql` berhasil dijalankan dan tabel `diaries` terbuat.
-- [x] Konfigurasi environment backend `.env` valid.
-- [x] Server Express `server.js` berhasil berjalan di port `3000`.
-- [x] Request `GET` berhasil diuji melalui browser.
-- [x] Operasi CRUD berhasil diuji secara menyeluruh melalui Postman.
-- [x] Project mobile `diary-app9` dibuat dengan template tabs (Expo Router).
-- [x] Package `@reduxjs/toolkit` dan `react-redux` terpasang.
-- [x] Folder `src/` berisi `api.ts`, `diarySlice.ts`, `store.ts`, dan `hooks.ts`.
-- [x] Route dinamis `detail/[id].tsx` dan `edit/[id].tsx` berfungsi normal.
-- [x] File `.env` mobile memiliki konfigurasi `EXPO_PUBLIC_API_URL`.
-- [x] Halaman Home berhasil menampilkan data dari MySQL.
-- [x] Fitur Create diary berhasil dan data masuk ke MySQL.
-- [x] Fitur Edit diary berhasil memperbarui data di MySQL.
-- [x] Fitur Delete diary berhasil menghapus data di MySQL.
-- [x] Setelah aplikasi di-restart, data tetap persisten tersimpan di database MySQL.
