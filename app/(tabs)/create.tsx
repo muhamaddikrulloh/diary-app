@@ -1,133 +1,145 @@
 import { useState } from "react";
+
 import {
   Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
+  Pressable,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import DiaryForm from "../../src/components/DiaryForm";
-import { useAppDispatch } from "../../src/app/hooks";
-import { addDiary } from "../../src/features/diary/diarySlice";
-import { COLORS, LAYOUT, RADIUS, SPACE, TYPO } from "../../src/styles/tokens";
 
-const MOODS = ["😍", "🎯", "😌", "🥰"];
+import { useRouter } from "expo-router";
+
+import {
+  addDiary,
+} from "../../src/diarySlice";
+
+import {
+  useAppDispatch,
+} from "../../src/hooks";
 
 export default function CreateScreen() {
   const router = useRouter();
-  const dispatch = useAppDispatch();
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
-  const [mood, setMood] = useState("😍");
+  const dispatch =
+    useAppDispatch();
 
-  const showValidation = (message: string) => {
-    if (Platform.OS === "web") {
-      window.alert(message);
+  const [title, setTitle] =
+    useState("");
+
+  const [body, setBody] =
+    useState("");
+
+  const [mood, setMood] =
+    useState("😊");
+
+  const save = async () => {
+    if (!title || !body) {
+      Alert.alert(
+        "Validasi",
+        "Judul dan isi wajib diisi"
+      );
       return;
     }
 
-    Alert.alert("Validasi", message);
-  };
+    try {
+      await dispatch(
+        addDiary({
+          title,
+          diary_date:
+            new Date()
+              .toISOString()
+              .slice(0, 10),
+          body,
+          mood,
+        })
+      ).unwrap();
 
-  const saveDiary = () => {
-    if (title.trim().length < 3) {
-      showValidation("Judul diary minimal 3 karakter.");
-      return;
+      router.replace("/");
+    } catch {
+      Alert.alert(
+        "Error",
+        "Diary gagal disimpan"
+      );
     }
-
-    if (!body.trim()) {
-      showValidation("Isi diary wajib diisi.");
-      return;
-    }
-
-    const today = new Date().toISOString().slice(0, 10);
-
-    dispatch(
-      addDiary({
-        title: title.trim(),
-        date: today,
-        preview: body.trim().slice(0, 100),
-        body: body.trim(),
-        mood,
-      }),
-    );
-
-    setTitle("");
-    setBody("");
-    setMood("😍");
-
-    router.replace("/");
   };
 
   return (
-    <SafeAreaView edges={["top", "left", "right"]} style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "web" ? undefined : "padding"}
-        style={styles.keyboardView}
-      >
-        <View pointerEvents="none" style={styles.purpleBackground} />
-        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.content}>
-          <Text style={styles.heading}>Tambah Diary</Text>
+    <View style={styles.container}>
+      <Text style={styles.header}>
+        Tambah Diary
+      </Text>
 
-          <View style={styles.formPanel}>
-            <DiaryForm
-              title={title}
-              body={body}
-              mood={mood}
-              moods={MOODS}
-              onChangeTitle={setTitle}
-              onChangeBody={setBody}
-              onChangeMood={setMood}
-              onSave={saveDiary}
-              saveLabel="Simpan Diary"
-            />
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      <TextInput
+        value={title}
+        onChangeText={setTitle}
+        placeholder="Judul"
+        style={styles.input}
+      />
+
+      <TextInput
+        value={body}
+        onChangeText={setBody}
+        placeholder="Isi diary"
+        multiline
+        style={[
+          styles.input,
+          styles.body,
+        ]}
+      />
+
+      <TextInput
+        value={mood}
+        onChangeText={setMood}
+        style={styles.input}
+      />
+
+      <Pressable
+        style={styles.button}
+        onPress={save}
+      >
+        <Text style={styles.white}>
+          Simpan
+        </Text>
+      </Pressable>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.heroStart,
-  },
-  keyboardView: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-  },
-  purpleBackground: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    left: 0,
-    height: 160,
-    backgroundColor: COLORS.heroStart,
-  },
-  content: {
-    width: "100%",
-    maxWidth: LAYOUT.form,
-    alignSelf: "center",
-    paddingHorizontal: SPACE.l,
-    paddingTop: SPACE.l,
-    paddingBottom: SPACE.xxl,
-  },
-  heading: {
-    marginBottom: SPACE.l,
-    color: COLORS.white,
-    fontSize: TYPO.h1,
-    fontWeight: "700",
-  },
-  formPanel: {
-    padding: SPACE.l,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: RADIUS.card,
-    backgroundColor: COLORS.surface,
-  },
-});
+const styles =
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 16,
+      gap: 12,
+    },
+
+    header: {
+      fontSize: 24,
+      fontWeight: "700",
+    },
+
+    input: {
+      borderWidth: 1,
+      borderColor: "#ddd",
+      borderRadius: 12,
+      padding: 12,
+    },
+
+    body: {
+      minHeight: 120,
+      textAlignVertical: "top",
+    },
+
+    button: {
+      backgroundColor: "#2563EB",
+      padding: 14,
+      borderRadius: 12,
+      alignItems: "center",
+    },
+
+    white: {
+      color: "#fff",
+      fontWeight: "700",
+    },
+  });

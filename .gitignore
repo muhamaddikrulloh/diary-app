@@ -2,7 +2,6 @@
 
 # dependencies
 node_modules/
-.vscode/
 
 # Expo
 .expo/
@@ -32,7 +31,15 @@ yarn-error.*
 *.pem
 
 # local env files
-.env*.local
+.env
+.env.*
+!.env.example
+
+# local tooling / postman workspace
+.vscode/
+.claude/
+postman/
+.postman/
 
 # typescript
 *.tsbuildinfo

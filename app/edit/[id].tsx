@@ -1,144 +1,168 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useHeaderHeight } from "expo-router/react-navigation";
 import { useState } from "react";
+
 import {
   Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
+  Pressable,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
-import DiaryForm from "../../src/components/DiaryForm";
-import { editDiary } from "../../src/features/diary/diarySlice";
-import { useAppDispatch, useAppSelector } from "../../src/app/hooks";
-import { COLORS, LAYOUT, RADIUS, SPACE, TYPO } from "../../src/styles/tokens";
+import {
+  useLocalSearchParams,
+  useRouter,
+} from "expo-router";
 
-const MOODS = ["😍", "🎯", "😌", "🥰", "🌤️"];
+import {
+  editDiary,
+} from "../../src/diarySlice";
+
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../src/hooks";
 
 export default function EditScreen() {
   const router = useRouter();
-  const dispatch = useAppDispatch();
-  const headerHeight = useHeaderHeight();
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const dispatch =
+    useAppDispatch();
 
-  const entry = useAppSelector((state) =>
-    state.diary.entries.find((item) => item.id === Number(id)),
-  );
+  const { id } =
+    useLocalSearchParams<{
+      id: string;
+    }>();
 
-  const [title, setTitle] = useState(entry?.title ?? "");
-  const [body, setBody] = useState(entry?.body ?? "");
-  const [mood, setMood] = useState(entry?.mood ?? "😍");
-
-  if (!entry) {
-    return <Text style={styles.notFound}>Diary tidak ditemukan.</Text>;
-  }
-
-  const showValidation = (message: string) => {
-    if (Platform.OS === "web") {
-      window.alert(message);
-      return;
-    }
-
-    Alert.alert("Validasi", message);
-  };
-
-  const saveChanges = () => {
-    if (title.trim().length < 3) {
-      showValidation("Judul diary minimal 3 karakter.");
-      return;
-    }
-
-    if (!body.trim()) {
-      showValidation("Isi diary wajib diisi.");
-      return;
-    }
-
-    dispatch(
-      editDiary({
-        id: entry.id,
-        title: title.trim(),
-        body: body.trim(),
-        mood,
-      }),
+  const entry =
+    useAppSelector(
+      (state) =>
+        state.diary.entries.find(
+          (item) =>
+            item.id === Number(id)
+        )
     );
 
-    router.back();
+  const [title, setTitle] =
+    useState(entry?.title || "");
+
+  const [body, setBody] =
+    useState(entry?.body || "");
+
+  const [mood, setMood] =
+    useState(entry?.mood || "😊");
+
+  if (!entry) {
+    return (
+      <Text style={{ padding: 16 }}>
+        Diary tidak ditemukan.
+      </Text>
+    );
+  }
+
+  const save = async () => {
+    try {
+      await dispatch(
+        editDiary({
+          id: entry.id,
+          data: {
+            title,
+            diary_date:
+              entry.diary_date,
+            body,
+            mood,
+          },
+        })
+      ).unwrap();
+
+      router.replace({
+        pathname:
+          "/detail/[id]",
+        params: {
+          id: String(entry.id),
+        },
+      });
+    } catch {
+      Alert.alert(
+        "Error",
+        "Gagal mengubah diary"
+      );
+    }
   };
 
   return (
-    <SafeAreaView edges={["bottom", "left", "right"]} style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "web" ? undefined : "padding"}
-        keyboardVerticalOffset={headerHeight}
-        style={styles.keyboardView}
-      >
-        <View pointerEvents="none" style={styles.purpleBackground} />
-        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.content}>
-          <Text style={styles.heading}>Perbarui cerita</Text>
+    <View style={styles.container}>
+      <Text style={styles.header}>
+        Edit Diary
+      </Text>
 
-          <View style={styles.formPanel}>
-            <DiaryForm
-              title={title}
-              body={body}
-              mood={mood}
-              moods={MOODS}
-              onChangeTitle={setTitle}
-              onChangeBody={setBody}
-              onChangeMood={setMood}
-              onSave={saveChanges}
-              saveLabel="Simpan Perubahan"
-            />
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      <TextInput
+        value={title}
+        onChangeText={setTitle}
+        style={styles.input}
+      />
+
+      <TextInput
+        value={body}
+        onChangeText={setBody}
+        multiline
+        style={[
+          styles.input,
+          styles.body,
+        ]}
+      />
+
+      <TextInput
+        value={mood}
+        onChangeText={setMood}
+        style={styles.input}
+      />
+
+      <Pressable
+        style={styles.button}
+        onPress={save}
+      >
+        <Text style={styles.white}>
+          Simpan Perubahan
+        </Text>
+      </Pressable>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-  },
-  keyboardView: {
-    flex: 1,
-  },
-  purpleBackground: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    left: 0,
-    height: 140,
-    backgroundColor: COLORS.heroStart,
-  },
-  content: {
-    width: "100%",
-    maxWidth: LAYOUT.form,
-    alignSelf: "center",
-    paddingHorizontal: SPACE.l,
-    paddingTop: SPACE.l,
-    paddingBottom: SPACE.xxl,
-  },
-  heading: {
-    marginBottom: SPACE.l,
-    fontSize: TYPO.h1,
-    fontWeight: "700",
-    color: COLORS.white,
-  },
-  formPanel: {
-    padding: SPACE.l,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: RADIUS.card,
-    backgroundColor: COLORS.surface,
-  },
-  notFound: {
-    padding: SPACE.xl,
-    color: COLORS.muted,
-    fontSize: TYPO.body,
-  },
-});
+const styles =
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 16,
+      gap: 12,
+    },
+
+    header: {
+      fontSize: 24,
+      fontWeight: "700",
+    },
+
+    input: {
+      borderWidth: 1,
+      borderColor: "#ddd",
+      borderRadius: 12,
+      padding: 12,
+    },
+
+    body: {
+      minHeight: 120,
+      textAlignVertical: "top",
+    },
+
+    button: {
+      backgroundColor: "#2563EB",
+      padding: 14,
+      borderRadius: 12,
+      alignItems: "center",
+    },
+
+    white: {
+      color: "#fff",
+      fontWeight: "700",
+    },
+  });
